@@ -12,7 +12,7 @@ public class Point {
     /**
      * 3 coordinates of the Point
      **/
-    final Double3 xyz;
+    final protected Double3 xyz;
 
     /**
      * constructor to initialize the Point object with 3 given coordinates
@@ -39,7 +39,7 @@ public class Point {
      * @return vector between P1 and current Point
      */
     public Vector subtract(Point point2) {
-        return new Vector(point2.xyz.subtract(this.xyz));
+        return new Vector(this.xyz.subtract(point2.xyz));
     }
 
     /**
@@ -57,6 +57,7 @@ public class Point {
      * @return squared distance
      */
     public double distanceSquared(Point point2) {
+        // distance squared is the sum of the squares of the difference between corresponding coordinates of the two points
         return (this.xyz.d1 - point2.xyz.d1) * (this.xyz.d1 - point2.xyz.d1) + (this.xyz.d2 - point2.xyz.d2) * (this.xyz.d2 - point2.xyz.d2) + (this.xyz.d3 - point2.xyz.d3) * (this.xyz.d3 - point2.xyz.d3);
     }
 
