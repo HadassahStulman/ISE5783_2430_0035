@@ -31,7 +31,9 @@ public class Sphere extends RadialGeometry {
         return center;
     }
 
+    @Override
     public Vector getNormal(Point point) {
         return null;
     }
+
 }

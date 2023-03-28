@@ -35,7 +35,8 @@ public class Vector extends Point {
      * @param vector2 vector to add to vector
      * @return result of add
      */
-    public Vector add(Vector vector2) {
+    @Override
+    public Point add(Vector vector2) {
         return new Vector(this.xyz.add(vector2.xyz));
     }
 
