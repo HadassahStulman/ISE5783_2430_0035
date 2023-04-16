@@ -12,7 +12,7 @@ public class Point {
     /**
      * 3 coordinates of the Point
      **/
-    final protected Double3 xyz;
+    final Double3 xyz;
 
     /**
      * constructor to initialize the Point object with 3 given coordinates

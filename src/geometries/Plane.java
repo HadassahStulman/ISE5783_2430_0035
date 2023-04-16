@@ -16,11 +16,11 @@ public class Plane implements Geometry {
      * constructor to initialize plane with point and normal
      *
      * @param q0     point on plane
-     * @param normal normal vector to plane
+     * @param vector normal vector to plane
      */
-    public Plane(Point q0, Vector normal) {
+    public Plane(Point q0, Vector vector) {
         this.q0 = q0;
-        this.normal = normal.normalize();
+        this.normal = vector.normalize();
     }
 
     /**
@@ -32,7 +32,11 @@ public class Plane implements Geometry {
      */
     public Plane(Point point1, Point point2, Point point3) {
         this.q0 = point1;
+        // check that
         this.normal = null;
+        /**
+         * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+         */
     }
 
     /**
@@ -56,6 +60,6 @@ public class Plane implements Geometry {
 
     @Override
     public Vector getNormal(Point point) {
-        return normal;
+        return this.getNormal();
     }
 }
