@@ -21,14 +21,13 @@ class TubeTests {
         // ============ Equivalence Partitions Tests ==============
         // TC01 simple test
         // ensure there are no exceptions
-        //assertDoesNotThrow(() -> t.getNormal(new Point(1,0,0)), "");
-        assertEquals(new Point(2,0,1), t.getNormal(new Point(1,0,1)),
+        assertDoesNotThrow(() -> t.getNormal(new Point(2,0,1)), "");
+        assertEquals(new Point(1,0,0), t.getNormal(new Point(2,0,1)),
                 "Tube's normal is not orthogonal to the tangent plane");
 
         // =============== Boundary Values Tests ==================
         //TC11 the vector that connects the given point to the head of the axis ray, is orthogonal to the axis ray
-        Vector v=new Point(1,0,0).subtract(axisRay.getP0());
-        assertThrows(IllegalArgumentException.class, ()->v.dotProduct(axisRay.getDir()),
+        assertThrows(IllegalArgumentException.class, ()->t.getNormal(new Point(1,0,0)),
                 "Can't find normal for a point that creates 90 degree angle with the head of the axis ray");
 
     }

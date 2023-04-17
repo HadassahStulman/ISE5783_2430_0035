@@ -21,7 +21,7 @@ class SphereTests {
         Sphere sp=new Sphere(new Point(0,0,0), 1);
         // ensure there are no exceptions
         assertDoesNotThrow(() -> sp.getNormal(new Point(0,0,1)), "");
-        assertEquals(new Vector(0,0,2), sp.getNormal(new Point(0,0,1)),"Sphere's normal is not orthogonal to the tangent plane");
+        assertEquals(new Vector(0,0,1), sp.getNormal(new Point(0,0,1)),"Sphere's normal is not orthogonal to the tangent plane");
 
         // =============== Boundary Values Tests ==================
         // there are no boundary tests

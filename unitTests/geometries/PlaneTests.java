@@ -20,8 +20,8 @@ class PlaneTests {
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01 simple test
-        Point p1=new Point(10,0,0);
-        Point p2=new Point(0,10,0);
+        Point p1=new Point(1,0,0);
+        Point p2=new Point(0,1,0);
         Point p3=new Point(0,0,0);
         Plane pl= new Plane(p1,p2, p3);
         // ensure there are no exceptions
