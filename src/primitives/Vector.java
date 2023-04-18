@@ -71,6 +71,7 @@ public class Vector extends Point {
         double coorI = this.xyz.d2 * vector2.xyz.d3 - this.xyz.d3 * vector2.xyz.d2;
         double coorJ = this.xyz.d1 * vector2.xyz.d3 - this.xyz.d3 * vector2.xyz.d1;
         double coorK = this.xyz.d1 * vector2.xyz.d2 - this.xyz.d2 * vector2.xyz.d1;
+
         return new Vector(coorI, coorJ * -1, coorK);
     }
 
@@ -80,7 +81,9 @@ public class Vector extends Point {
      * @return squared length
      */
     public double lengthSquared() {
-        return xyz.d1 * xyz.d1 + xyz.d2 * xyz.d2 + xyz.d3 * xyz.d3;
+        double result = xyz.d1 * xyz.d1 + xyz.d2 * xyz.d2 + xyz.d3 * xyz.d3;
+
+        return result;
     }
 
     /**
@@ -94,10 +97,19 @@ public class Vector extends Point {
 
     /**
      * reduce vector by its length to normalize original vector
+     *
      * @return normalized vector
      */
     public Vector normalize() {
-        return new Vector(xyz.reduce(this.length()));
+        //for performance reasons we don't use the following
+        //return new Vector(xyz.reduce(this.length()));
+        double len = length();
+
+        double x = xyz.d1 / len;
+        double y = xyz.d2 / len;
+        double z = xyz.d3 / len;
+
+        return new Vector(x, y, z);
     }
 
     @Override
