@@ -40,14 +40,15 @@ public class Tube extends RadialGeometry {
 
     @Override
     public Vector getNormal(Point point) {
-        double t = axisRay.getDir().dotProduct(point.subtract(axisRay.getP0())); // the distance between P0 and the projection of point on the axis ray
-        Point O = axisRay.getP0().add(axisRay.getDir().scale(t)); // a point on the axis ray that is also on the normal
-
-
+        Point O;
         // checking if the vector between po and point is orthogonal to the axis ray
         Vector temp = point.subtract(axisRay.getP0()); // a vector between po and the given point
-        if(isZero(temp.dotProduct(axisRay.getDir())))
-            throw new IllegalArgumentException("Can't find normal for a point that creates 90 degree angle with the head of the axis ray");
+        if (isZero(temp.dotProduct(axisRay.getDir())))
+            O = axisRay.getP0();
+        else {
+            double t = axisRay.getDir().dotProduct(point.subtract(axisRay.getP0())); // the distance between P0 and the projection of point on the axis ray
+            O = axisRay.getP0().add(axisRay.getDir().scale(t)); // a point on the axis ray that is also on the normal
+        }
 
         return point.subtract(O).normalize();
     }

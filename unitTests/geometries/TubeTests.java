@@ -27,8 +27,8 @@ class TubeTests {
 
         // =============== Boundary Values Tests ==================
         //TC11 the vector that connects the given point to the head of the axis ray, is orthogonal to the axis ray
-        assertThrows(IllegalArgumentException.class, ()->t.getNormal(new Point(1,0,0)),
-                "Can't find normal for a point that creates 90 degree angle with the head of the axis ray");
+        assertEquals(new Point(1,0,0), t.getNormal(new Point(1,0,0)),
+                "Couldn't find normal for a point that creates 90 degree angle with the head of the axis ray");
 
     }
 }
