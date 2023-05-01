@@ -66,7 +66,7 @@ class SphereTests {
 
         // **** Group: Ray's line crosses the sphere (but not the center)
         // TC05: Ray starts at sphere and goes inside (1 point)
-        p1 = new Point(0.29443776,0.708647956,0);
+        p1 = new Point(0.2944377600179957,0.7086479559778445,0.0);
         result = sphere.findIntersections(new Ray(new Point(2,0,0), new Vector(-2.8942938268, 1.2025567618,0)));
         assertEquals(1, result.size(), "Wrong number of points");
         assertEquals(p1, result.get(0), "Ray starts at sphere and goes inside, 1 point");

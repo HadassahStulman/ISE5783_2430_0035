@@ -45,8 +45,15 @@ public class Sphere extends RadialGeometry {
     public List<Point> findIntersections(Ray ray) {
 
         Point P0 = ray.getP0();
+        Vector dir = ray.getDir();
+
+        // if starts in center point
+        if (center.equals(P0)) {
+            return List.of(P0.add(dir.scale(radius)));
+        }
+
         Vector u = center.subtract(P0);
-        double tm = ray.getDir().dotProduct(u);
+        double tm = dir.dotProduct(u);
         double d = sqrt(u.lengthSquared() - pow(tm, 2));
 
         double th = sqrt(pow(radius, 2) - pow(d, 2));
@@ -56,21 +63,20 @@ public class Sphere extends RadialGeometry {
         if (d >= radius || t1 <= 0 && t2 <= 0)
             return null;
 
-        Point P1 = P0.add(ray.getDir().scale(t1));
-        Point P2 = P0.add(ray.getDir().scale(t2));
-
-        // If t1 is less than or equal to 0, or if P1 is equal to P0.
+        // If t1 is less than or equal to 0
         // then P1 will not be considered as an intersection point
-        // and if P2 is not equal to P0, return a list containing only P2.
-        if ((t1 <= 0 || P1 == P0) && P2 != P0)
+        if (t1 <= 0 && t2 > 0) {
+            Point P2 = P0.add(dir.scale(t2));
             return List.of(P2);
+        }
 
-        // If t2 is less than or equal to 0, or if P2 is equal to P0.
+        // If t2 is less than or equal to 0
         // then P2 will not be considered as an intersection point
-        // and if P1 is not equal to P0, return a list containing only P1.
-        if ((t2 <= 0 || P2 == P0) && P1 != P0)
+        if (t2 <= 0 && t1 > 0) {
+            Point P1 = P0.add(dir.scale(t1));
             return List.of(P1);
+        }
 
-        return List.of(P1,P2);
+        return List.of(P0.add(dir.scale(t1)), P0.add(dir.scale(t2)));
     }
 }
