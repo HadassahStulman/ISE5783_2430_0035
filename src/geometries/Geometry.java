@@ -8,7 +8,7 @@ import primitives.Point;
  *
  * @author Efrat Roth and Hadassah Stulman
  */
-public interface Geometry {
+public interface Geometry extends Intersectable {
 
     /**
      * return a normal vector to the geometry at the given point

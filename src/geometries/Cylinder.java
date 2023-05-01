@@ -4,6 +4,8 @@ import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
 
+import java.util.List;
+
 /**
  * Cylinder class represents three-dimensional Cylinder in 3D Cartesian coordinate
  *
@@ -36,6 +38,11 @@ public class Cylinder extends Tube {
 
     @Override
     public Vector getNormal(Point point) {
+        return null;
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
         return null;
     }
 }
