@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * An interface for geometric objects that can be intersected by a ray.
+ * @author Efrat Roth and hadassah Stulman
  */
 public interface Intersectable {
 

@@ -6,6 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.*;
+
 /**
  * class Plane represents two-dimensional plane in Cartesian 3D coordinate system
  *
@@ -36,13 +38,13 @@ public class Plane implements Geometry {
     public Plane(Point point1, Point point2, Point point3) {
         this.q0 = point1;
 
-        if(point1.equals(point2)||point2.equals(point3)||point3.equals(point1))
+        if (point1.equals(point2) || point2.equals(point3) || point3.equals(point1))
             throw new IllegalArgumentException("Two of the three points are identical");
 
-        Vector v1= point1.subtract(point2); // vector between point1 and point2
-        Vector v2= point2.subtract(point3); // vector between point2 and point3
+        Vector v1 = point1.subtract(point2); // vector between point1 and point2
+        Vector v2 = point2.subtract(point3); // vector between point2 and point3
 
-        if(v1.normalize().equals(v2.normalize()))
+        if (v1.normalize().equals(v2.normalize()))
             throw new IllegalArgumentException("all three points are on one line");
 
         // a vector that is orthogonal to two vectors on the plane is orthogonal to the plane.
@@ -76,6 +78,30 @@ public class Plane implements Geometry {
 
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return null;
+
+
+        // Calculate the denominator of the equation
+        double denom = normal.dotProduct(ray.getDir());
+
+        // if ray is parallel to tha plans normal there are no intersections
+        if (isZero(denom))
+            return null;
+
+        // If the origin of the ray is the reference point of the plane, there are no intersections
+        if (q0.equals(ray.getP0()))
+            return null;
+
+        // Calculate the intersection point
+        Vector QP0 = q0.subtract(ray.getP0());
+        double numer = normal.dotProduct(QP0);
+        double t = alignZero(numer / denom);
+
+        // If the intersection point is behind the origin of the ray, there are no intersections
+        if (t <= 0)
+            return null;
+
+        // Return a list containing the intersection point
+        return List.of(ray.getPoint(t));
     }
 }
+
