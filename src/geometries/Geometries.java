@@ -48,24 +48,25 @@ public class Geometries implements Intersectable {
         int amount = 0;
         List<Point> lstIntersection;
 
-        // Iterate over all the geometries in this composite object.
+
+        // Collect all the intersection points in a list.
+        List<Point> lstAllIntersections = null;
         for (Intersectable geometry : geometries) {
+
             lstIntersection = geometry.findIntersections(ray);
-            if (lstIntersection != null)
-                amount += lstIntersection.size();
+
+            if (lstIntersection != null) {
+
+                if (lstAllIntersections == null)
+                    lstAllIntersections = new LinkedList<Point>();
+
+                lstAllIntersections.addAll(lstIntersection);
+            }
         }
 
         // If there are no intersection points, return null.
-        if (amount == 0)
+        if (lstAllIntersections == null)
             return null;
-
-        // Collect all the intersection points in a list.
-        List<Point> lstAllIntersections = new LinkedList<Point>();
-        for (Intersectable geometry : geometries) {
-            lstIntersection = geometry.findIntersections(ray);
-            if (lstIntersection != null)
-                lstAllIntersections.addAll(lstIntersection);
-        }
 
         // Return the list of intersection points.
         return lstAllIntersections;

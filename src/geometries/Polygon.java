@@ -8,20 +8,29 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-/** Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
+/**
+ * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
  * system
- * @author Dan */
+ *
+ * @author Dan
+ */
 public class Polygon implements Geometry {
-    /** List of polygon's vertices */
+    /**
+     * List of polygon's vertices
+     */
     protected final List<Point> vertices;
-    /** Associated plane in which the polygon lays */
-    protected final Plane       plane;
-    private final int           size;
+    /**
+     * Associated plane in which the polygon lays
+     */
+    protected final Plane plane;
+    private final int size;
 
-    /** Polygon constructor based on vertices list. The list must be ordered by edge
+    /**
+     * Polygon constructor based on vertices list. The list must be ordered by edge
      * path. The polygon must be convex.
-     * @param  vertices                 list of vertices according to their order by
-     *                                  edge path
+     *
+     * @param vertices list of vertices according to their order by
+     *                 edge path
      * @throws IllegalArgumentException in any case of illegal combination of
      *                                  vertices:
      *                                  <ul>
@@ -42,19 +51,19 @@ public class Polygon implements Geometry {
         if (vertices.length < 3)
             throw new IllegalArgumentException("A polygon can't have less than 3 vertices");
         this.vertices = List.of(vertices);
-        size          = vertices.length;
+        size = vertices.length;
 
         // Generate the plane according to the first three vertices and associate the
         // polygon with this plane.
         // The plane holds the invariant normal (orthogonal unit) vector to the polygon
-        plane         = new Plane(vertices[0], vertices[1], vertices[2]);
+        plane = new Plane(vertices[0], vertices[1], vertices[2]);
         if (size == 3) return; // no need for more tests for a Triangle
 
-        Vector  n        = plane.getNormal();
+        Vector n = plane.getNormal();
         // Subtracting any subsequent points will throw an IllegalArgumentException
         // because of Zero Vector if they are in the same point
-        Vector  edge1    = vertices[vertices.length - 1].subtract(vertices[vertices.length - 2]);
-        Vector  edge2    = vertices[0].subtract(vertices[vertices.length - 1]);
+        Vector edge1 = vertices[vertices.length - 1].subtract(vertices[vertices.length - 2]);
+        Vector edge2 = vertices[0].subtract(vertices[vertices.length - 1]);
 
         // Cross Product of any subsequent edges will throw an IllegalArgumentException
         // because of Zero Vector if they connect three vertices that lay in the same
@@ -79,10 +88,55 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public Vector getNormal(Point point) { return plane.getNormal(); }
+    public Vector getNormal(Point point) {
+        return plane.getNormal();
+    }
 
     @Override
     public List<Point> findIntersections(Ray ray) {
+
+        // Get the origin and direction of the ray
+        Point p0 = ray.getP0();
+        Vector v = ray.getDir();
+
+        int positive = 0, negative = 0,
+                verAmount = vertices.size();
+
+        // Loop through each vertex of the polygon
+        for (int i = 1; i < verAmount; i++) {
+
+            // Calculate the normal vector to the plane formed by the ray and the two vertices
+            Vector Vi = vertices.get(i - 1).subtract(p0);
+            Vector Vi1 = vertices.get(i).subtract(p0);
+
+            Vector Ni = Vi.crossProduct(Vi1);
+            double vni = v.dotProduct(Ni);
+
+            // If the dot product is zero, the ray is parallel to the plane formed by the two vertices
+            if (isZero(vni))
+                return null;
+
+            if (vni < 0)
+                negative++;
+            else positive++;
+        }
+
+        // calculate the above for the first and last vertices
+        Vector Vn = vertices.get(verAmount - 1).subtract(p0);
+        Vector V1 = vertices.get(0).subtract(p0);
+        Vector Ni = Vn.crossProduct(V1);
+        double vni = v.dotProduct(Ni);
+
+        // If the dot product is zero, the ray is parallel to the plane formed by the two vertices
+        if (isZero(vni))
+            return null;
+
+        // If the dot products of all the normal vectors and the ray direction have the same sign
+        // the ray is intersects the polygon
+        if (vni > 0 && positive == verAmount - 1 || vni < 0 && negative == verAmount - 1)
+            return plane.findIntersections(ray);
+
         return null;
     }
+
 }

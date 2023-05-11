@@ -62,7 +62,7 @@ class TriangleTests {
         assertNull(triangle.findIntersections(new Ray(p1, new Vector(0,2,4))),
                 "intersection point is out ot the triangle");
 
-        // TC03: intersection point is out of the triangle and between the continuation if two sides
+        // TC03: intersection point is out of the triangle and between the continuation of two sides
         assertNull(triangle.findIntersections(new Ray(p1, new Vector(-1,4,1))),
                 "intersection point is out of the triangle and between the continuation of two of its sides");
 
