@@ -14,11 +14,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ *
+ * @author Efrat Roth and Hadassah Stulman
+ */
 class IntegrationTests {
     Camera cam0 = new Camera(new Point(0, 0, 0), new Vector(0, 0, -1),new Vector(0, 1, 0))
             .setVPDistance(1).setVPSize(3,3);
     Camera cam5 = new Camera(new Point(0, 0, 0.5), new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setVPDistance(1).setVPSize(3,3);
+
+    /**
+     * This method test the amount of integrations between camera's 3x3 grid of rays and a sphere.
+     */
     @Test
     void CameraSphereIntegrations() {
 
@@ -34,6 +42,10 @@ class IntegrationTests {
                 "Sphere TC05 failed");
     }
 
+
+    /**
+     * This method test the amount of integrations between camera's 3x3 grid of rays and a Plane.
+     */
     @Test
     void CameraPlaneIntegrations() {
         Camera cam = new Camera(new Point(0,0,0), new Vector(0, 0, -1), new Vector(0, 1, 0))
@@ -47,6 +59,9 @@ class IntegrationTests {
 
     }
 
+    /**
+     * This method test the amount of integrations between camera's 3x3 grid of rays and a Triangle.
+     */
     @Test
     void CameraTriangleIntegrations() {
         assertEquals(1, countIntegration(cam0, new Triangle(new Point(0,1,-2), new Point(1,-1,-2), new Point(-1,-1,-2))),

@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for primitives.Vector class
- *
+ * Unit tests for primitives.Point class
+ * @author Efrat Roth and Hadassah Stulman
  */
 class PointTests {
 
@@ -52,7 +52,7 @@ class PointTests {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(14d, p.distanceSquared(new Point(2, 3, 4)), 0.0001, //
-                "Wrong squared distance between the point and itself");
+                "Wrong squared distance between the two points");
 
         // =============== Boundary Values Tests ==================
         // TC11: test distance with the same point
@@ -68,7 +68,7 @@ class PointTests {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
         assertEquals(Math.sqrt(14), p.distance(new Point(2, 3, 4)), 0.0001, //
-                "Wrong distance between the point and itself");
+                "Wrong distance between the two points");
 
         // =============== Boundary Values Tests ==================
         // TC11: test distance with the same point

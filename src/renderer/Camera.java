@@ -2,6 +2,8 @@ package renderer;
 
 import primitives.*;
 
+import java.util.MissingResourceException;
+
 import static primitives.Util.*;
 
 
@@ -48,6 +50,18 @@ public class Camera {
      */
     private double distance;
 
+
+    /**
+     The ImageWriter object used to write the image of the scene captured by the camera.
+     */
+    private ImageWriter imageWriter;
+
+    /**
+     The RayTracerBase object used to trace the rays in the scene captured by the camera.
+     */
+    private RayTracerBase rayTracer;
+
+
     /**
      * Constructs a new Camera object with the specified position, up vector,
      * <p>
@@ -91,12 +105,32 @@ public class Camera {
      * @return this Camera object
      */
     public Camera setVPDistance(double distance) {
-        if(isZero(distance))
+        if (isZero(distance))
             throw new IllegalArgumentException("distance can't be 0");
         this.distance = distance;
         return this;
     }
 
+
+    /**
+     sets the ImageWriter of the Camera
+     @param imageWriter the ImageWriter to be set
+     @return this Camera object
+     */
+    public Camera setImageWriter(ImageWriter imageWriter) {
+        this.imageWriter = imageWriter;
+        return this;
+    }
+    /**
+
+     sets the RayTracerBase of the Camera
+     @param rayTracer the RayTracerBase to be set
+     @return this Camera object
+     */
+    public Camera setRayTracer(RayTracerBase rayTracer) {
+        this.rayTracer = rayTracer;
+        return this;
+    }
 
     /**
      * Constructs a new ray from the camera's position through the specified
@@ -126,6 +160,104 @@ public class Camera {
 
         Vector Vij = Pij.subtract(p0);
         return new Ray(p0, Vij);
+    }
+
+
+    /**
+     * Casts a ray through a pixel at position (j, i) on the view plane,
+     * and returns the color of the closest intersected geometry, if any.
+     *
+     * @param nX the number of pixels along the width of the image plane
+     * @param nY the number of pixels along the height of the image plane
+     * @param j  the horizontal index of the pixel being casted
+     * @param i  the vertical index of the pixel being casted
+     * @return the color of the closest intersected geometry, if any
+     */
+    private Color castRay(int nX, int nY, int j, int i) {
+        Ray ray = constructRay(nX, nY, j, i);
+        return rayTracer.traceRay(ray);
+    }
+
+
+    /**
+     * Renders an image using the camera's settings.
+     *
+     * @throws MissingResourceException if one of the camera's fields is missing
+     */
+    public void renderImage() {
+        if (p0 == null)
+            throw new MissingResourceException("missing the camera's position in 3D space", "Point", "p0");
+        if (vTo == null)
+            throw new MissingResourceException("missing the direction vector the camera is facing", "Vector", "vTo");
+        if (vUp == null)
+            throw new MissingResourceException("missing the up vector of the camera", "Vector", "vUp");
+        if (height == 0)
+            throw new MissingResourceException("missing the height of the camera's view plane", "double", "height");
+        if (width == 0)
+            throw new MissingResourceException("missing the width of the camera's view plane", "double", "width");
+
+        //// !!!!!!!!! check the doubles????????????? they cant be null... !!!!!!!!!!!!!!!
+
+        if (imageWriter == null)
+            throw new MissingResourceException("missing the image writer of the camera", "ImageWriter", "imageWriter");
+        if (rayTracer == null)
+            throw new MissingResourceException("missing the ray tracer of the camera", "RayTracerBase", "rayTracer");
+
+
+        int nX=imageWriter.getNx();
+        int nY=imageWriter.getNy();
+        // Iterate over the width of the image (columns)
+        for (int j = 0; j< nX; j++) {
+
+            // Iterate over the height of the image (rows)
+            for (int i = 0; i < nY; i++) {
+
+                Color color=castRay(nX, nY, j,i);
+                imageWriter.writePixel(j,i,color);
+            }
+        }
+    }
+
+
+    /**
+     * Prints a grid of a given interval and color on the image writer.
+     *
+     * @param interval the distance between the lines of the grid.
+     * @param color    the color of the lines.
+     * @throws MissingResourceException if the image writer of the camera is missing.
+     */
+    public void printGrid(int interval, Color color) {
+
+        if (imageWriter == null)
+            throw new MissingResourceException("missing the image writer of the camera", "ImageWriter", "imageWriter");
+
+        int modI = 0;
+        // Iterate over the width of the image (columns)
+        for (int j = 0; j < imageWriter.getNx(); j++) {
+
+            modI = j % interval;
+            // Iterate over the height of the image (rows)
+            for (int i = 0; i < imageWriter.getNy(); i++) {
+
+                // If the current pixel is on the grid, write it using the grid color.
+                if (modI == 0 || i % interval == 0)
+                    imageWriter.writePixel(j, i, color);
+            }
+        }
+    }
+
+    /**
+     * Writes the image to the image writer (delegation).
+     *
+     * @throws MissingResourceException if the image writer of the camera is missing.
+     */
+    public void writeToImage() {
+
+        if (imageWriter == null)
+            throw new MissingResourceException("missing the image writer of the camera", "ImageWriter", "imageWriter");
+
+        imageWriter.writeToImage();
+
     }
 
 }
