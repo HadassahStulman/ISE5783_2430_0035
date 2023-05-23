@@ -65,6 +65,8 @@ public class Triangle extends Polygon {
  */
         List<GeoPoint> intersections = super.findGeoIntersectionsHelper(ray);
         return intersections == null ? null
-                : intersections.stream().map(p -> new GeoPoint(this, p.point)).toList();
+                : intersections.stream()
+                .map(p -> new GeoPoint(this, p.point))
+                .toList();
     }
 }

@@ -2,9 +2,11 @@ package scene;
 
 import geometries.Geometries;
 import lighting.AmbientLight;
+import lighting.LightSource;
 import primitives.Color;
-import primitives.Double3;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.MissingResourceException;
 
 /**
@@ -15,34 +17,24 @@ import java.util.MissingResourceException;
 public class Scene {
 
     private String name;
-    private Color background = Color.BLACK;
-    private AmbientLight ambientLight = AmbientLight.NONE;
-    private Geometries geometries = new Geometries();
+    public final Color background;
+    public final AmbientLight ambientLight;
+    public  final Geometries geometries;
+    public final List<LightSource> lights ;
 
-    public String getName() {
-        return name;
-    }
-
-    public Color getBackground() {
-        return background;
-    }
-
-    public AmbientLight getAmbientLight() {
-        return ambientLight;
-    }
-
-    public Geometries getGeometries() {
-        return geometries;
-    }
 
 
     /**
      * Constructs a new Scene object with the given name.
      *
-     * @param name The name of the scene.
+     * @param builder The name of the scene.
      */
-    private Scene(String name) {
-        this.name = name;
+    private Scene(SceneBuilder builder ) {
+        this.name = builder.name;
+        this.background = builder.background;
+        this.ambientLight = builder.ambientLight;
+        this.geometries = builder.geometries;
+        this.lights = builder.lights;
     }
 
 
@@ -52,16 +44,20 @@ public class Scene {
      *
      * @author Efrat Roth and Hadassah Stulman
      */
-    public static class sceneBuilder {
-        private Scene scene = null;
+    public static class SceneBuilder {
+        private final String name;
+        private List<LightSource> lights = new LinkedList<>();
+        private Geometries geometries = new Geometries();
+        private AmbientLight ambientLight = AmbientLight.NONE;
+        private Color background = Color.BLACK;
 
         /**
          * private constructor that creates scene
          *
          * @param name
          */
-        public sceneBuilder(String name) {
-            scene = new Scene(name);
+        public SceneBuilder(String name) {
+            this.name=name;
         }
 
         /**
@@ -70,8 +66,8 @@ public class Scene {
          * @param background The background color to set.
          * @return This sceneBuilder object with the updated background color.
          */
-        public sceneBuilder setBackground(Color background) {
-            scene.background = background;
+        public SceneBuilder setBackground(Color background) {
+            this.background = background;
             return this;
         }
 
@@ -81,8 +77,8 @@ public class Scene {
          * @param ambient The ambient light to set.
          * @return This sceneBuilder object with the updated ambient light.
          */
-        public sceneBuilder setAmbientLight(AmbientLight ambient) {
-            scene.ambientLight = ambient;
+        public SceneBuilder setAmbientLight(AmbientLight ambient) {
+            this.ambientLight = ambient;
             return this;
 
         }
@@ -93,8 +89,20 @@ public class Scene {
          * @param geometries The geometries to set.
          * @return This sceneBuilder object with the updated geometries.
          */
-        public sceneBuilder setGeometries(Geometries geometries) {
-            scene.geometries = geometries;
+        public SceneBuilder setGeometries(Geometries geometries) {
+            this.geometries = geometries;
+            return this;
+        }
+
+
+        /**
+         * Sets the lights in the sceneBuilder.
+         *
+         * @param lights The lights to set.
+         * @return This sceneBuilder object with the updated lights.
+         */
+        public SceneBuilder setLights(LinkedList<LightSource> lights) {
+            this.lights = lights;
             return this;
         }
 
@@ -105,13 +113,12 @@ public class Scene {
          * @return The scene
          */
         public Scene build() {
-            if (scene.name == null)
-                throw new MissingResourceException("missing scene name", "Scene", "name");
-            if (scene.geometries == null)
-                throw new MissingResourceException("scene has no Geometries", "Scene", "geometries");
-            return scene;
+//            if (name == null)
+//                throw new MissingResourceException("missing scene name", "Scene", "name");
+//            if (geometries == null)
+//                throw new MissingResourceException("scene has no Geometries", "Scene", "geometries");
+            return new Scene(this);
         }
     }
-
 
 }
