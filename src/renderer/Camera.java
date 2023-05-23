@@ -231,17 +231,19 @@ public class Camera {
         if (imageWriter == null)
             throw new MissingResourceException("missing the image writer of the camera", "ImageWriter", "imageWriter");
 
-        int modI = 0;
-        // Iterate over the width of the image (columns)
-        for (int j = 0; j < imageWriter.getNx(); j++) {
+        // write grids rows
+        for (int row = 0; row < imageWriter.getNy(); row+=interval) {
 
-            modI = j % interval;
-            // Iterate over the height of the image (rows)
-            for (int i = 0; i < imageWriter.getNy(); i++) {
+            for (int col = 0; col < imageWriter.getNy(); col++) {
+                imageWriter.writePixel(col, row, color);
+            }
+        }
 
-                // If the current pixel is on the grid, write it using the grid color.
-                if (modI == 0 || i % interval == 0)
-                    imageWriter.writePixel(j, i, color);
+        // write grids columns
+        for (int col = 0; col < imageWriter.getNx(); col+=interval) {
+
+            for (int row = 0; row < imageWriter.getNy(); row++) {
+                    imageWriter.writePixel(col, row, color);
             }
         }
     }

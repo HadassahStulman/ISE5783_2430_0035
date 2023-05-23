@@ -14,7 +14,7 @@ import primitives.Vector;
  *
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -93,7 +93,7 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
         // Get the origin and direction of the ray
         Point p0 = ray.getP0();
@@ -134,7 +134,7 @@ public class Polygon implements Geometry {
         // If the dot products of all the normal vectors and the ray direction have the same sign
         // the ray is intersects the polygon
         if (vni > 0 && positive == verAmount - 1 || vni < 0 && negative == verAmount - 1)
-            return plane.findIntersections(ray);
+            return plane.findGeoIntersections(ray).stream().map(p-> new GeoPoint(this, p.point)).toList();
 
         return null;
     }

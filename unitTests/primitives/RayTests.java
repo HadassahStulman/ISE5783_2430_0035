@@ -41,7 +41,7 @@ class RayTests {
 
         // =============== Boundary Values Tests ==================
         // TC02: Empty List
-        assertNull(ray.findClosestPoint(List.of()));
+        assertNull(ray.findClosestPoint( List.of()));
 
         // TC03: The first Point in the list is the closest
         assertEquals(new Point(-1,0,1),ray.findClosestPoint(List.of(new Point(-1,0,1), new Point(-1,0,3), new Point(-1,0,5))),

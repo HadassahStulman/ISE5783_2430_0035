@@ -25,7 +25,7 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 /**
  // Get the origin and direction of the ray
  Point p0 = ray.getP0();
@@ -63,6 +63,8 @@ public class Triangle extends Polygon {
  // Otherwise, there are no intersections
  return null;
  */
-        return super.findIntersections(ray);
+        List<GeoPoint> intersections = super.findGeoIntersectionsHelper(ray);
+        return intersections == null ? null
+                : intersections.stream().map(p -> new GeoPoint(this, p.point)).toList();
     }
 }

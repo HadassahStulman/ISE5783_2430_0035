@@ -3,6 +3,9 @@ package scene;
 import geometries.Geometries;
 import lighting.AmbientLight;
 import primitives.Color;
+import primitives.Double3;
+
+import java.util.MissingResourceException;
 
 /**
  * A class representing a scene that contains geometries and lighting properties.
@@ -11,28 +14,26 @@ import primitives.Color;
  */
 public class Scene {
 
-    /**
-     * The name of the scene.
-     */
-    public String name;
+    private String name;
+    private Color background = Color.BLACK;
+    private AmbientLight ambientLight = AmbientLight.NONE;
+    private Geometries geometries = new Geometries();
 
+    public String getName() {
+        return name;
+    }
 
-    /**
-     * The background color of the scene.
-     */
-    public Color background = Color.BLACK;
+    public Color getBackground() {
+        return background;
+    }
 
+    public AmbientLight getAmbientLight() {
+        return ambientLight;
+    }
 
-    /**
-     * The ambient light of the scene.
-     */
-    public AmbientLight ambientLight = AmbientLight.NONE;
-
-
-    /**
-     * The geometries in the scene.
-     */
-    public Geometries geometries = new Geometries();
+    public Geometries getGeometries() {
+        return geometries;
+    }
 
 
     /**
@@ -40,41 +41,77 @@ public class Scene {
      *
      * @param name The name of the scene.
      */
-    public Scene(String name) {
+    private Scene(String name) {
         this.name = name;
     }
 
 
     /**
-     * Sets the background color of the scene.
+     * SceneBuilder class is responsible for constructing scenes in a graphical application using the Builder pattern.
+     * It allows users to create scenes step by step, providing flexibility and maintainability.
      *
-     * @param background The background color to set.
-     * @return This Scene object with the updated background color.
+     * @author Efrat Roth and Hadassah Stulman
      */
-    public Scene setBackground(Color background) {
-        this.background = background;
-        return this;
+    public static class sceneBuilder {
+        private Scene scene = null;
+
+        /**
+         * private constructor that creates scene
+         *
+         * @param name
+         */
+        public sceneBuilder(String name) {
+            scene = new Scene(name);
+        }
+
+        /**
+         * Sets the background color of the sceneBuilder.
+         *
+         * @param background The background color to set.
+         * @return This sceneBuilder object with the updated background color.
+         */
+        public sceneBuilder setBackground(Color background) {
+            scene.background = background;
+            return this;
+        }
+
+        /**
+         * Sets the ambient light of the sceneBuilder.
+         *
+         * @param ambient The ambient light to set.
+         * @return This sceneBuilder object with the updated ambient light.
+         */
+        public sceneBuilder setAmbientLight(AmbientLight ambient) {
+            scene.ambientLight = ambient;
+            return this;
+
+        }
+
+        /**
+         * Sets the geometries in the sceneBuilder.
+         *
+         * @param geometries The geometries to set.
+         * @return This sceneBuilder object with the updated geometries.
+         */
+        public sceneBuilder setGeometries(Geometries geometries) {
+            scene.geometries = geometries;
+            return this;
+        }
+
+
+        /**
+         * the function Build returns the final scene that was built
+         *
+         * @return The scene
+         */
+        public Scene build() {
+            if (scene.name == null)
+                throw new MissingResourceException("missing scene name", "Scene", "name");
+            if (scene.geometries == null)
+                throw new MissingResourceException("scene has no Geometries", "Scene", "geometries");
+            return scene;
+        }
     }
 
-    /**
-     * Sets the ambient light of the scene.
-     *
-     * @param ambientLight The ambient light to set.
-     * @return This Scene object with the updated ambient light.
-     */
-    public Scene setAmbientLight(AmbientLight ambientLight) {
-        this.ambientLight = ambientLight;
-        return this;
-    }
 
-    /**
-     * Sets the geometries in the scene.
-     *
-     * @param geometries The geometries to set.
-     * @return This Scene object with the updated geometries.
-     */
-    public Scene setGeometries(Geometries geometries) {
-        this.geometries = geometries;
-        return this;
-    }
 }

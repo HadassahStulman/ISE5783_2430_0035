@@ -3,6 +3,8 @@ package primitives;
 import java.util.List;
 import java.util.Objects;
 
+import geometries.Intersectable.GeoPoint;
+
 /**
  * class Ray is the basic class representing a ray in Cartesian 3-Dimensional coordinate system
  *
@@ -63,31 +65,43 @@ public class Ray {
     }
 
     /**
-     * finds the closest point to ray's base point.
+     * finds the closest GeoPoint to ray's base point.
      *
-     * @param points a list of points to search from
-     * @return the closest point to the given point
+     * @param intersections a list of GeoPoints to search from
+     * @return the closest GeoPoint to the given point
      */
-    public Point findClosestPoint(List<Point> points) {
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> intersections) {
 
         // the list is empty
-        if(points == null || points.size()==0)
+        if (intersections == null || intersections.size() == 0)
             return null;
 
         // initialize as if the first point's is the closest
-        Point closest = points.get(0);
-        double minDistance = p0.distance(closest);
+        GeoPoint closest = intersections.get(0);
+        double minDistance = p0.distance(closest.point);
         double distance;
 
         // run across the list of points
-        for (int i=1; i< points.size(); i++) {
+        for (int i = 1; i < intersections.size(); i++) {
 
-            distance = p0.distance(points.get(i));
+            distance = p0.distance(intersections.get(i).point);
             if (distance < minDistance)
-                closest = points.get(i);
+                closest = intersections.get(i);
         }
 
         return closest;
+    }
+
+    /**
+     * finds the closest point to ray's base point
+     *
+     * @param intersections a list of Points to search from
+     * @return the closest Point to the given point
+     */
+    public Point findClosestPoint(List<Point> intersections) {
+        return intersections == null || intersections.isEmpty() ? null
+                : findClosestGeoPoint(intersections.stream()
+                .map(p -> new GeoPoint(null, p)).toList()).point;
     }
 
     @Override
