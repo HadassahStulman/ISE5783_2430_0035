@@ -184,7 +184,7 @@ public class Camera {
      *
      * @throws MissingResourceException if one of the camera's fields is missing
      */
-    public void renderImage() {
+    public Camera renderImage() {
         if (p0 == null)
             throw new MissingResourceException("missing the camera's position in 3D space", "Point", "p0");
         if (vTo == null)
@@ -216,6 +216,7 @@ public class Camera {
                 imageWriter.writePixel(j,i,color);
             }
         }
+        return this;
     }
 
 

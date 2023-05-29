@@ -19,9 +19,8 @@ public class Scene {
     private String name;
     public final Color background;
     public final AmbientLight ambientLight;
-    public  final Geometries geometries;
-    public final List<LightSource> lights ;
-
+    public final Geometries geometries;
+    public final List<LightSource> lights;
 
 
     /**
@@ -29,7 +28,7 @@ public class Scene {
      *
      * @param builder The name of the scene.
      */
-    private Scene(SceneBuilder builder ) {
+    private Scene(SceneBuilder builder) {
         this.name = builder.name;
         this.background = builder.background;
         this.ambientLight = builder.ambientLight;
@@ -57,7 +56,7 @@ public class Scene {
          * @param name
          */
         public SceneBuilder(String name) {
-            this.name=name;
+            this.name = name;
         }
 
         /**
