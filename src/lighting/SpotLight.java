@@ -14,7 +14,14 @@ public class SpotLight extends PointLight {
     /**
      * The direction vector of the spotLight.
      */
-    private Vector direction;
+    private final Vector direction;
+
+    /**
+     * The concentration factor that determines the narrowness of the light beam emitted by the spotlight.
+     * Higher values create a narrower and more focused beam, while lower values result in a wider beam.
+     */
+    private double beamConcentration = 1;
+
 
     /**
      * Constructs a new SpotLight object with the specified intensity, position, and direction.
@@ -28,6 +35,21 @@ public class SpotLight extends PointLight {
         this.direction = direction.normalize();
     }
 
+
+    /**
+     * Sets the narrow beam concentration for the spotlight.
+     * Higher concentration values create a narrower and more focused beam.
+     * Lower concentration values result in a wider beam.
+     *
+     * @param concentration the narrow beam concentration value to set
+     * @return the modified SpotLight object with the updated narrow beam concentration
+     */
+    public SpotLight setNarrowBeam(double concentration) {
+        this.beamConcentration = concentration;
+        return this;
+    }
+
+
     @Override
     public Color getIntensity(Point p) {
 
@@ -37,11 +59,14 @@ public class SpotLight extends PointLight {
         // Get the direction vector from the specified point towards the point light
         Vector l = super.getL(p);
 
-        // Calculate the dot product between the direction vector of the spotlight and the direction vector from the point
+        // dot product between the direction vector of the spotlight and the direction vector from the point
         // towards the light. This determines the angle between the two vectors.
         double dirL = direction.dotProduct(l);
 
-        return pointLightColor.scale(Math.max(0,dirL));
+        // Calculate the beam factor, which represents the contribution of the light within the beam angle
+        double beamFactor = Math.pow(Math.max(0, dirL), beamConcentration);
+
+        return pointLightColor.scale(beamFactor);
     }
 }
 

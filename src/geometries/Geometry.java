@@ -1,6 +1,9 @@
 package geometries;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Material;
+import primitives.Point;
+import primitives.Vector;
 
 /**
  * interface geometry is the basic behavior of all Geometries in Cartesian 3-Dimensional coordinate system

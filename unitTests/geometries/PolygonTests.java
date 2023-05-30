@@ -1,12 +1,14 @@
 package geometries;
 
 import org.junit.jupiter.api.Test;
-import primitives.*;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static primitives.Util.*;
+import static primitives.Util.isZero;
 
 
 /**
@@ -96,31 +98,31 @@ public class PolygonTests {
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: intersection point is in the polygon
-        Polygon polygon=new Polygon(new Point(-1,1,0), new Point(1,3,0), new Point(3,2,0), new Point(-1,-1,0));
-        Point p1=new Point(0,0,-4);
-        List<Point> result= polygon.findIntersections(new Ray(p1, new Vector(0,1,4)));
-        assertEquals(1,result.size(),"Wrong Number Of Points");
-        assertEquals(List.of(new Point(0,1,0)), result, "Intersection Point is in the polygon");
+        Polygon polygon = new Polygon(new Point(-1, 1, 0), new Point(1, 3, 0), new Point(3, 2, 0), new Point(-1, -1, 0));
+        Point p1 = new Point(0, 0, -4);
+        List<Point> result = polygon.findIntersections(new Ray(p1, new Vector(0, 1, 4)));
+        assertEquals(1, result.size(), "Wrong Number Of Points");
+        assertEquals(List.of(new Point(0, 1, 0)), result, "Intersection Point is in the polygon");
 
         // TC02: intersection point is out of polygon
-        assertNull(polygon.findIntersections(new Ray(p1, new Vector(0,3,4))),
+        assertNull(polygon.findIntersections(new Ray(p1, new Vector(0, 3, 4))),
                 "intersection point is out ot the polygon");
 
         // TC03: intersection point is out of the polygon and between the continuation of two sides
-        assertNull(polygon.findIntersections(new Ray(p1, new Vector(1,3.5,4))),
+        assertNull(polygon.findIntersections(new Ray(p1, new Vector(1, 3.5, 4))),
                 "intersection point is out of the polygon and between the continuation of two of its sides");
 
         // =============== Boundary Values Tests ==================
         // TC04: intersection point is one of the polygon's corners
-        assertNull(polygon.findIntersections(new Ray(p1, new Vector(1,3,4))),
+        assertNull(polygon.findIntersections(new Ray(p1, new Vector(1, 3, 4))),
                 "intersection point is one of the corners");
 
         // TC05: intersection point is on one of the polygon's sides
-        assertNull(polygon.findIntersections(new Ray(p1, new Vector(0,2,4))),
+        assertNull(polygon.findIntersections(new Ray(p1, new Vector(0, 2, 4))),
                 "intersection point is on one of the triangle's sides");
 
         // TC06: intersection point is on the continuation of one of the sides
-        assertNull(polygon.findIntersections(new Ray(p1,new Vector(5,1,4))),
+        assertNull(polygon.findIntersections(new Ray(p1, new Vector(5, 1, 4))),
                 "intersection point is on the continuation of one of the sides");
     }
 }

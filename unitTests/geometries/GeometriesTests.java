@@ -1,11 +1,15 @@
 package geometries;
 
 import org.junit.jupiter.api.Test;
-import primitives.*;;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 class GeometriesTests {
 
@@ -41,7 +45,7 @@ class GeometriesTests {
         assertEquals(1, result.size(), "ray intersect only one geometry");
 
         //TC05: ray intersect all geometries in composite
-        result = geometry.findIntersections(new Ray(new Point(-2,0,-3), new Vector(6,1,6)));
-        assertEquals(4,result.size(),"ray intersect all geometries in composite");
+        result = geometry.findIntersections(new Ray(new Point(-2, 0, -3), new Vector(6, 1, 6)));
+        assertEquals(4, result.size(), "ray intersect all geometries in composite");
     }
 }

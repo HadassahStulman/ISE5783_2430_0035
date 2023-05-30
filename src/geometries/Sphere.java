@@ -6,8 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
-import static java.lang.Math.*;
-import static primitives.Util.*;
+import static java.lang.Math.sqrt;
+import static primitives.Util.alignZero;
 
 /**
  * Sphere class represents a 3D sphere in Cartesian 3D coordinate system
@@ -50,7 +50,8 @@ public class Sphere extends RadialGeometry {
 
         // if the ray starts from the center point of the sphere, return the point where the ray exits the sphere
         if (center.equals(P0)) {
-            return List.of(ray.getPoint(radius)).stream().map(p-> new GeoPoint(this, p)).toList();
+            return List.of(ray.getPoint(radius)).stream().map(p -> new GeoPoint(this, p))
+                    .toList();
         }
 
         // compute the intersection between the ray and the sphere using vector math
@@ -70,7 +71,7 @@ public class Sphere extends RadialGeometry {
         if (t1 > 0 && t2 > 0) {
             Point P1 = ray.getPoint(t1);
             Point P2 = ray.getPoint(t2);
-            return List.of(new GeoPoint(this,P1), new GeoPoint(this, P2));
+            return List.of(new GeoPoint(this, P1), new GeoPoint(this, P2));
         }
 
         // if t1 is less than or equal to 0, return P2 as the intersection point

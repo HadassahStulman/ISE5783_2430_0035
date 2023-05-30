@@ -1,9 +1,11 @@
 package primitives;
 
+import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 import java.util.Objects;
 
-import geometries.Intersectable.GeoPoint;
+import static primitives.Util.isZero;
 
 /**
  * class Ray is the basic class representing a ray in Cartesian 3-Dimensional coordinate system
@@ -61,6 +63,9 @@ public class Ray {
      * @return a new point that represents the position of the point on the ray at the given distance.
      */
     public Point getPoint(double t) {
+        if (isZero(t)) {
+            return p0;
+        }
         return p0.add(dir.scale(t));
     }
 
@@ -73,22 +78,23 @@ public class Ray {
     public GeoPoint findClosestGeoPoint(List<GeoPoint> intersections) {
 
         // the list is empty
-        if (intersections == null || intersections.size() == 0)
+        if (intersections == null || intersections.size() == 0) {
             return null;
+        }
 
         // initialize as if the first point's is the closest
         GeoPoint closest = intersections.get(0);
-        double minDistance = p0.distance(closest.point);
+        double minDistance = Double.POSITIVE_INFINITY;
         double distance;
 
         // run across the list of points
-        for (int i = 1; i < intersections.size(); i++) {
-
-            distance = p0.distance(intersections.get(i).point);
-            if (distance < minDistance)
-                closest = intersections.get(i);
+        for (GeoPoint geoPoint : intersections) {
+            distance = p0.distanceSquared(geoPoint.point);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closest = geoPoint;
+            }
         }
-
         return closest;
     }
 
@@ -101,7 +107,8 @@ public class Ray {
     public Point findClosestPoint(List<Point> intersections) {
         return intersections == null || intersections.isEmpty() ? null
                 : findClosestGeoPoint(intersections.stream()
-                .map(p -> new GeoPoint(null, p)).toList()).point;
+                .map(p -> new GeoPoint(null, p))
+                .toList()).point;
     }
 
     @Override
@@ -115,9 +122,9 @@ public class Ray {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof Ray ray)
-            return this.p0.equals(ray.p0) && this.dir.equals(ray.dir);
-        return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ray ray = (Ray) o;
+        return p0.equals(ray.p0) && dir.equals(ray.dir);
     }
 
     @Override

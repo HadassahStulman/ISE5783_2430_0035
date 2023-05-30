@@ -7,7 +7,6 @@ import primitives.Color;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.MissingResourceException;
 
 /**
  * A class representing a scene that contains geometries and lighting properties.
@@ -16,11 +15,11 @@ import java.util.MissingResourceException;
  */
 public class Scene {
 
-    private String name;
     public final Color background;
     public final AmbientLight ambientLight;
     public final Geometries geometries;
     public final List<LightSource> lights;
+    private final String name;
 
 
     /**

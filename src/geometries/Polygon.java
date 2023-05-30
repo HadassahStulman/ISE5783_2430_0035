@@ -1,12 +1,12 @@
 package geometries;
 
-import static primitives.Util.isZero;
-
-import java.util.List;
-
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
+
+import static primitives.Util.isZero;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -134,7 +134,7 @@ public class Polygon extends Geometry {
         // If the dot products of all the normal vectors and the ray direction have the same sign
         // the ray is intersects the polygon
         if (vni > 0 && positive == verAmount - 1 || vni < 0 && negative == verAmount - 1)
-            return plane.findGeoIntersections(ray).stream().map(p-> new GeoPoint(this, p.point)).toList();
+            return plane.findGeoIntersections(ray).stream().map(p -> new GeoPoint(this, p.point)).toList();
 
         return null;
     }

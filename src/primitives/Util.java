@@ -12,7 +12,8 @@ public abstract class Util {
     /**
      * Empty private constructor to hide the public one
      */
-    private Util() {}
+    private Util() {
+    }
 
     // double store format (bit level):
     //    seee eeee eeee (1.)mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm

@@ -9,12 +9,11 @@ import java.util.Objects;
  */
 public class Point {
 
+    public static final Point ZERO = new Point(0, 0, 0);
     /**
      * 3 coordinates of the Point
      **/
     final Double3 xyz;
-
-    public static final Point ZERO= new Point(0,0,0);
 
     /**
      * constructor to initialize the Point object with 3 given coordinates
@@ -29,6 +28,7 @@ public class Point {
 
     /**
      * constructor to initialize the Point object with values from a given Double3 object
+     *
      * @param xyz Double3 object of Point's coordinates
      */
     Point(Double3 xyz) {
@@ -38,6 +38,7 @@ public class Point {
 
     /**
      * Returns the x coordinate of the point.
+     *
      * @return The x coordinate of the point.
      */
     public double getX() {
@@ -46,6 +47,7 @@ public class Point {
 
     /**
      * Returns the y coordinate of the point.
+     *
      * @return The y coordinate of the point.
      */
     public double getY() {
@@ -54,6 +56,7 @@ public class Point {
 
     /**
      * Returns the z coordinate of the point.
+     *
      * @return The z coordinate of the point.
      */
     public double getZ() {
@@ -63,6 +66,7 @@ public class Point {
 
     /**
      * vector subtraction between two Points
+     *
      * @param point2 second Point
      * @return vector between P1 and current Point
      */
@@ -72,6 +76,7 @@ public class Point {
 
     /**
      * adds vector to point to create new point with summed values of the original point and vector's coordinates
+     *
      * @param vector vector to add to point
      * @return new point that
      */
@@ -81,6 +86,7 @@ public class Point {
 
     /**
      * calculates squared distance between two points
+     *
      * @param point2 other point
      * @return squared distance
      */
@@ -91,6 +97,7 @@ public class Point {
 
     /**
      * calculates distance between two points
+     *
      * @param point2 other point
      * @return distance
      */
@@ -102,9 +109,9 @@ public class Point {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof Point point)
-            return xyz.equals(point.xyz);
-        return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return xyz.equals(point.xyz);
     }
 
     @Override

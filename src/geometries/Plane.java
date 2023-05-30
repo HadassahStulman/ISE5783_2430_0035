@@ -6,7 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
-import static primitives.Util.*;
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * class Plane represents two-dimensional plane in Cartesian 3D coordinate system

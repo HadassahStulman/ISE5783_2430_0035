@@ -1,10 +1,13 @@
 package renderer;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 import java.util.MissingResourceException;
 
-import static primitives.Util.*;
+import static primitives.Util.isZero;
 
 
 /**
@@ -52,12 +55,12 @@ public class Camera {
 
 
     /**
-     The ImageWriter object used to write the image of the scene captured by the camera.
+     * The ImageWriter object used to write the image of the scene captured by the camera.
      */
     private ImageWriter imageWriter;
 
     /**
-     The RayTracerBase object used to trace the rays in the scene captured by the camera.
+     * The RayTracerBase object used to trace the rays in the scene captured by the camera.
      */
     private RayTracerBase rayTracer;
 
@@ -113,19 +116,21 @@ public class Camera {
 
 
     /**
-     sets the ImageWriter of the Camera
-     @param imageWriter the ImageWriter to be set
-     @return this Camera object
+     * sets the ImageWriter of the Camera
+     *
+     * @param imageWriter the ImageWriter to be set
+     * @return this Camera object
      */
     public Camera setImageWriter(ImageWriter imageWriter) {
         this.imageWriter = imageWriter;
         return this;
     }
-    /**
 
-     sets the RayTracerBase of the Camera
-     @param rayTracer the RayTracerBase to be set
-     @return this Camera object
+    /**
+     * sets the RayTracerBase of the Camera
+     *
+     * @param rayTracer the RayTracerBase to be set
+     * @return this Camera object
      */
     public Camera setRayTracer(RayTracerBase rayTracer) {
         this.rayTracer = rayTracer;
@@ -204,16 +209,16 @@ public class Camera {
             throw new MissingResourceException("missing the ray tracer of the camera", "RayTracerBase", "rayTracer");
 
 
-        int nX=imageWriter.getNx();
-        int nY=imageWriter.getNy();
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
         // Iterate over the width of the image (columns)
-        for (int j = 0; j< nX; j++) {
+        for (int j = 0; j < nX; j++) {
 
             // Iterate over the height of the image (rows)
             for (int i = 0; i < nY; i++) {
 
-                Color color=castRay(nX, nY, j,i);
-                imageWriter.writePixel(j,i,color);
+                Color color = castRay(nX, nY, j, i);
+                imageWriter.writePixel(j, i, color);
             }
         }
         return this;
@@ -233,7 +238,7 @@ public class Camera {
             throw new MissingResourceException("missing the image writer of the camera", "ImageWriter", "imageWriter");
 
         // write grids rows
-        for (int row = 0; row < imageWriter.getNy(); row+=interval) {
+        for (int row = 0; row < imageWriter.getNy(); row += interval) {
 
             for (int col = 0; col < imageWriter.getNy(); col++) {
                 imageWriter.writePixel(col, row, color);
@@ -241,10 +246,10 @@ public class Camera {
         }
 
         // write grids columns
-        for (int col = 0; col < imageWriter.getNx(); col+=interval) {
+        for (int col = 0; col < imageWriter.getNx(); col += interval) {
 
             for (int row = 0; row < imageWriter.getNy(); row++) {
-                    imageWriter.writePixel(col, row, color);
+                imageWriter.writePixel(col, row, color);
             }
         }
     }

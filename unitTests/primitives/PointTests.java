@@ -2,15 +2,17 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for primitives.Point class
+ *
  * @author Efrat Roth and Hadassah Stulman
  */
 class PointTests {
 
-    Point p=new Point(1,1,1);
+    Point p = new Point(1, 1, 1);
 
     /**
      * Test method for {@link primitives.Point#add(primitives.Vector)}.
@@ -20,7 +22,7 @@ class PointTests {
     void testAdd() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
-        assertEquals(new Point(2, 3, 4),p.add(new Vector(1, 2, 3)), //
+        assertEquals(new Point(2, 3, 4), p.add(new Vector(1, 2, 3)), //
                 "Wrong point add");
 
 
@@ -35,7 +37,7 @@ class PointTests {
     void testSubtract() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Simple test
-        assertEquals(p, new Point(2, 3, 4).subtract(new Point(1, 2, 3)), //
+        assertEquals(new Vector(p.xyz), new Point(2, 3, 4).subtract(new Point(1, 2, 3)), //
                 "Wrong point subtract");
 
         // =============== Boundary Values Tests ==================

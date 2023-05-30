@@ -7,11 +7,12 @@ import primitives.Vector;
 /**
  * A subclass of Light representing a directional light source.
  * Implements the LightSource interface.
+ *
  * @author Efrat Roth and Hadassah Stulman
  */
 public class DirectionalLight extends Light implements LightSource {
 
-    private Vector direction;
+    private final Vector direction;
 
     /**
      * Constructs a new DirectionalLight object with the specified intensity and direction.
@@ -39,7 +40,12 @@ public class DirectionalLight extends Light implements LightSource {
 
     @Override
     public Vector getL(Point p) {
-       return direction.normalize();
+        return direction.normalize();
+    }
+
+    @Override
+    public double getDistance(Point point) {
+        return Double.POSITIVE_INFINITY;
     }
 }
 

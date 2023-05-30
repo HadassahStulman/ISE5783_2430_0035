@@ -1,7 +1,12 @@
 package lighting;
-import primitives.*;
+
+import primitives.Color;
+import primitives.Point;
+import primitives.Vector;
+
 /**
  * The interface representing a light source.
+ *
  * @author Efrat Roth and Hadassah Stulman
  */
 public interface LightSource {
@@ -21,5 +26,7 @@ public interface LightSource {
      * @return the direction vector from the specified point towards the light source
      */
     public Vector getL(Point p);
+
+    public double getDistance(Point point);
 }
 

@@ -4,16 +4,15 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
-import static primitives.Util.alignZero;
-
 /**
  * A subclass of Light representing a point light source.
  * Implements the LightSource interface.
+ *
  * @author Efrat Roth and Hadassah Stulman
  */
 public class PointLight extends Light implements LightSource {
 
-    private Point position;
+    private final Point position;
     private double kC = 1;
     private double kL = 0;
     private double kQ = 0;
@@ -22,7 +21,7 @@ public class PointLight extends Light implements LightSource {
      * Constructs a new PointLight object with the specified intensity and position.
      *
      * @param intensity the intensity of the point light
-     * @param position the position of the point light
+     * @param position  the position of the point light
      */
     public PointLight(Color intensity, Point position) {
         super(intensity);
@@ -75,14 +74,17 @@ public class PointLight extends Light implements LightSource {
         // The intensity decreases with distance based on the attenuation factors
         double denom = kC + kL * distance + kQ * distance * distance;
 
-        // Reduce the intensity by dividing it by the denominator
-        Color IL = getIntensity().reduce(denom);
-
-        return IL;
+        // Reduce the intensity by dividing it by the denominator and returns the result
+        return getIntensity().reduce(denom);
     }
 
     @Override
     public Vector getL(Point p) {
         return p.subtract(position).normalize();
+    }
+
+    @Override
+    public double getDistance(Point point) {
+        return position.distance(point);
     }
 }

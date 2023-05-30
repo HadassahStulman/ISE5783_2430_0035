@@ -4,11 +4,12 @@ import primitives.Color;
 
 /**
  * The abstract base class representing a light source.
+ *
  * @author Efrat Roth and Hadassah Stulman
  */
 public abstract class Light {
 
-    private Color intensity;
+    private final Color intensity;
 
     /**
      * Constructs a new Light object with the specified intensity.
