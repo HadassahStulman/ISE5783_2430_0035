@@ -18,6 +18,9 @@ import static primitives.Util.isZero;
  */
 public class PolygonTests {
 
+   private  Point[] pts = {new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1)};
+    private Polygon pol = new Polygon(pts);
+
     /**
      * Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}.
      */
@@ -75,9 +78,6 @@ public class PolygonTests {
     public void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: There is a simple single test here - using a quad
-        Point[] pts =
-                {new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1)};
-        Polygon pol = new Polygon(pts);
         // ensure there are no exceptions
         assertDoesNotThrow(() -> pol.getNormal(new Point(0, 0, 1)), "");
         // generate the test result
@@ -124,5 +124,14 @@ public class PolygonTests {
         // TC06: intersection point is on the continuation of one of the sides
         assertNull(polygon.findIntersections(new Ray(p1, new Vector(5, 1, 4))),
                 "intersection point is on the continuation of one of the sides");
+    }
+
+    /**
+     * Test method for {@link geometries.Polygon#findGeoIntersections(primitives.Ray, double)}.
+     */
+    @Test
+    void testFindGeoIntersections() {
+        assertNull(pol.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)), 100),
+                "a far intersection Point is included in intersections");
     }
 }

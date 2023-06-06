@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Efrat Roth and Hadassah Stulman
  */
 class SphereTests {
+    private Sphere sp = new Sphere(new Point(0, 0, 0), 1);
+
     /**
      * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
      */
@@ -22,7 +24,6 @@ class SphereTests {
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01 simple test
-        Sphere sp = new Sphere(new Point(0, 0, 0), 1);
         // ensure there are no exceptions
         assertDoesNotThrow(() -> sp.getNormal(new Point(0, 0, 1)), "");
         assertEquals(new Vector(0, 0, 1), sp.getNormal(new Point(0, 0, 1)), "Sphere's normal is not orthogonal to the tangent plane");
@@ -126,5 +127,15 @@ class SphereTests {
         // TC16: Ray's line is outside, ray is orthogonal to ray start to sphere's center line
         assertNull(sphere.findIntersections(new Ray(new Point(1, 2, 0), new Vector(2, 0, 0))),
                 "Ray's line is outside, ray is orthogonal to ray start to sphere's center line");
+    }
+
+
+    /**
+     * Test method for {@link geometries.Sphere#findGeoIntersections(primitives.Ray, double)}.
+     */
+    @Test
+    public void testFindGeoIntersections() {
+        assertNull(sp.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,-0.5, -113)),100),
+                "a far intersection Point is included in intersections");
     }
 }

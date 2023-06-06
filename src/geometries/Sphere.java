@@ -43,15 +43,14 @@ public class Sphere extends RadialGeometry {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
 
         // get the starting point of the ray
         Point P0 = ray.getP0();
 
         // if the ray starts from the center point of the sphere, return the point where the ray exits the sphere
         if (center.equals(P0)) {
-            return List.of(ray.getPoint(radius)).stream().map(p -> new GeoPoint(this, p))
-                    .toList();
+            return List.of(new GeoPoint(this, ray.getPoint(radius)));
         }
 
         // compute the intersection between the ray and the sphere using vector math
@@ -64,24 +63,30 @@ public class Sphere extends RadialGeometry {
         double t2 = alignZero(tm - th);
 
         // if there is no intersection between the ray and the sphere, return null
-        if (d >= radius || t1 <= 0 && t2 <= 0)
+        if (d >= radius || t1 <= 0 && t2 <= 0) {
             return null;
+        }
+        double dist1 = alignZero(maxDistance - t1);
+        double dist2 = alignZero(maxDistance - t2);
 
+        // if t1 and t2 are both positive and the distances are less than max distance
         // return both intersection points
-        if (t1 > 0 && t2 > 0) {
+        if (t1 > 0 && t2 > 0  && (dist1 > 0) && (dist2 > 0)){
             Point P1 = ray.getPoint(t1);
             Point P2 = ray.getPoint(t2);
             return List.of(new GeoPoint(this, P1), new GeoPoint(this, P2));
         }
 
-        // if t1 is less than or equal to 0, return P2 as the intersection point
-        if (t1 <= 0) {
+        // if t1 is less than or equal to 0 and the distance is less than max distance
+        // return P2 as the intersection point
+        if (t1 <= 0 && (dist1 > 0) ) {
             Point P2 = ray.getPoint(t2);
             return List.of(new GeoPoint(this, P2));
         }
 
-        // if t2 is less than or equal to 0, return P1 as the intersection point
-        if (t2 <= 0) {
+        // if t2 is less than or equal to 0 and the distance is less than max distance
+        // return P1 as the intersection point
+        if (t2 <= 0 && (dist2 > 0) ) {
             Point P1 = ray.getPoint(t1);
             return List.of(new GeoPoint(this, P1));
         }

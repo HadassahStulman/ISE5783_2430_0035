@@ -186,7 +186,7 @@ public class Camera {
 
     /**
      * Renders an image using the camera's settings.
-     *
+     * @return this camera object
      * @throws MissingResourceException if one of the camera's fields is missing
      */
     public Camera renderImage() {

@@ -15,9 +15,24 @@ import java.util.List;
  */
 public class Scene {
 
+    /**
+     * background color of the scene
+     */
     public final Color background;
+
+    /**
+     * the ambient light of the scene
+     */
     public final AmbientLight ambientLight;
+
+    /**
+     * list of geometries in the scene
+     */
     public final Geometries geometries;
+
+    /**
+     * list of light sources in the scene
+     */
     public final List<LightSource> lights;
     private final String name;
 
@@ -52,7 +67,7 @@ public class Scene {
         /**
          * private constructor that creates scene
          *
-         * @param name
+         * @param name the scene's name
          */
         public SceneBuilder(String name) {
             this.name = name;

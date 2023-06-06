@@ -9,7 +9,11 @@ import java.util.Objects;
  */
 public class Point {
 
+    /**
+     * static Zero Point
+     */
     public static final Point ZERO = new Point(0, 0, 0);
+
     /**
      * 3 coordinates of the Point
      **/

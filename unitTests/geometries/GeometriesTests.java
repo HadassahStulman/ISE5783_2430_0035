@@ -13,17 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GeometriesTests {
 
+    private Sphere sphere = new Sphere(new Point(1, 0, 0), 1);
+    private Triangle triangle = new Triangle(new Point(0, 2, 0), new Point(2, 0, 0), new Point(-2, 0, 0));
+    private Plane plane = new Plane(new Point(2, 0, 0), new Point(0, 2, 0), new Point(0, 0, 2));
+    private Geometries geometry = new Geometries(sphere, triangle, plane);
 
     /**
      * Test method for {@link geometries.Geometry#findIntersections(primitives.Ray)}.
      */
     @Test
     void testFindIntersections() {
-
-        Sphere sphere = new Sphere(new Point(1, 0, 0), 1);
-        Triangle triangle = new Triangle(new Point(0, 2, 0), new Point(2, 0, 0), new Point(-2, 0, 0));
-        Plane plane = new Plane(new Point(2, 0, 0), new Point(0, 2, 0), new Point(0, 0, 2));
-        Geometries geometry = new Geometries(sphere, triangle, plane);
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: not all geometries has intersection points
@@ -47,5 +46,14 @@ class GeometriesTests {
         //TC05: ray intersect all geometries in composite
         result = geometry.findIntersections(new Ray(new Point(-2, 0, -3), new Vector(6, 1, 6)));
         assertEquals(4, result.size(), "ray intersect all geometries in composite");
+    }
+
+    /**
+     * Test method for {@link geometries.Geometry#findGeoIntersections(primitives.Ray, double)}.
+     */
+    @Test
+    void testFindGeoIntersections() {
+    assertNull(geometry.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)),100),
+            "a far point is included in intersections");
     }
 }

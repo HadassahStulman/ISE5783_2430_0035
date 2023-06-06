@@ -1,10 +1,12 @@
 package renderer;
 
 import geometries.Intersectable.GeoPoint;
+import lighting.Light;
 import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -96,7 +98,7 @@ public class RayTracerBasic extends RayTracerBase {
             if (nl * nv > 0) {
 
                 // Check if the geometric point is unshaded by any objects in the scene along the light direction
-//                if (unshaded(geoPoint, l)) {
+                if (unshaded(geoPoint, l, n, nv, lightSource)) {
 
                     // Get the intensity of the light source at the geometric point
                     Color iL = lightSource.getIntensity(geoPoint.point);
@@ -108,7 +110,7 @@ public class RayTracerBasic extends RayTracerBase {
 
                     // Add the scaled diffuse and specular components to the color
                     color = color.add(iL.scale(diffuse), iL.scale(specular));
-                //}
+                }
             }
         }
 
@@ -155,4 +157,32 @@ public class RayTracerBasic extends RayTracerBase {
         return material.kS.scale(Math.pow(max, material.nShininess));
     }
 
+
+    /**
+     * Checks if a given geometric point is unshaded by any objects in the scene along a specified light direction.
+     *
+     * @param gp The geometric point to check for shading.
+     * @param l  The direction of the light vector.
+     * @return {@code true} if the geometric point is unshaded, {@code false} otherwise.
+     */
+    private boolean unshaded(GeoPoint gp, Vector l, Vector n, double nv, LightSource light) {
+
+        // Reverse the light direction to get the direction from the point towards the light source
+        Vector lightDirection = l.scale(-1);
+
+        Vector epsVector = n.scale(nv<0 ? DELTA: -DELTA);
+        Point point = gp.point.add(epsVector);
+
+        // Create a ray from the geometric point towards the light source
+        Ray lightRay = new Ray(point, lightDirection);
+
+        // Find the intersections between the ray and the geometries in the scene
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
+
+        if(intersections == null)
+            return true;
+
+        // If there are no intersections, the point is unshaded
+        return intersections.isEmpty();
+    }
 }

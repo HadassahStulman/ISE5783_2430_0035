@@ -6,11 +6,11 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
- * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
- * system
+ * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate system
  *
  * @author Dan
  */
@@ -93,50 +93,62 @@ public class Polygon extends Geometry {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+        // Find intersections of the ray with the plane containing the polygon
+        List<GeoPoint> planeIntersections = plane.findGeoIntersections(ray, maxDistance);
 
-        // Get the origin and direction of the ray
-        Point p0 = ray.getP0();
-        Vector v = ray.getDir();
-
-        int positive = 0, negative = 0,
-                verAmount = vertices.size();
-
-        // Loop through each vertex of the polygon
-        for (int i = 1; i < verAmount; i++) {
-
-            // Calculate the normal vector to the plane formed by the ray and the two vertices
-            Vector Vi = vertices.get(i - 1).subtract(p0);
-            Vector Vi1 = vertices.get(i).subtract(p0);
-
-            Vector Ni = Vi.crossProduct(Vi1);
-            double vni = v.dotProduct(Ni);
-
-            // If the dot product is zero, the ray is parallel to the plane formed by the two vertices
-            if (isZero(vni))
-                return null;
-
-            if (vni < 0)
-                negative++;
-            else positive++;
+        // If no intersections with the plane, return null
+        if (planeIntersections == null) {
+            return null;
         }
 
-        // calculate the above for the first and last vertices
-        Vector Vn = vertices.get(verAmount - 1).subtract(p0);
-        Vector V1 = vertices.get(0).subtract(p0);
-        Vector Ni = Vn.crossProduct(V1);
-        double vni = v.dotProduct(Ni);
+        // Get the origin and direction vectors of the ray
+        Point P0 = ray.getP0();
+        Vector v = ray.getDir();
 
-        // If the dot product is zero, the ray is parallel to the plane formed by the two vertices
-        if (isZero(vni))
+        // Get the first two vertices of the polygon
+        Point P1 = vertices.get(1);
+        Point P2 = vertices.get(0);
+
+        // Calculate vectors v1 and v2 from the origin of the ray to the first two vertices of the polygon
+        Vector v1 = P0.subtract(P1);
+        Vector v2 = P0.subtract(P2);
+
+        // Calculate the sign of the dot product of the ray direction and the cross product of v1 and v2
+        double sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+
+        // If the sign is approximately zero, the ray is parallel to the polygon, so return null
+        if (isZero(sign)) {
             return null;
+        }
 
-        // If the dot products of all the normal vectors and the ray direction have the same sign
-        // the ray is intersects the polygon
-        if (vni > 0 && positive == verAmount - 1 || vni < 0 && negative == verAmount - 1)
-            return plane.findGeoIntersections(ray).stream().map(p -> new GeoPoint(this, p.point)).toList();
+        // Determine the desired sign based on the first calculation
+        boolean positive = sign > 0;
 
-        return null;
+        // Iterate through all remaining vertices of the polygon
+        for (int i = vertices.size() - 1; i > 0; --i) {
+            v1 = v2;
+            v2 = P0.subtract(vertices.get(i));
+
+            // Calculate the sign of the dot product of the ray direction and the cross product of v1 and v2
+            sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+
+            // If the sign is approximately zero, the ray is parallel to the polygon, so return null
+            if (isZero(sign)) {
+                return null;
+            }
+
+            // If the sign is different from the desired sign, the ray does not intersect the polygon, so return null
+            if (positive != (sign > 0)) {
+                return null;
+            }
+        }
+
+        // Get the intersection point from the first intersection with the plane
+        Point point = planeIntersections.get(0).point;
+
+        // Return a list containing the intersection point as a GeoPoint associated with this polygon
+        return List.of(new GeoPoint(this, point));
     }
 
 }

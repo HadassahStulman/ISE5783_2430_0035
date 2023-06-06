@@ -16,6 +16,9 @@ import static primitives.Util.isZero;
  * @author Efrat Roth and Hadassah Stulman
  */
 class TriangleTests {
+
+    private Triangle triangle = new Triangle(new Point(0, 2, 0), new Point(2, 0, 0), new Point(-2, 0, 0));
+
     /**
      * Test method for {@link geometries.Triangle#getNormal(primitives.Point)}.
      */
@@ -52,7 +55,6 @@ class TriangleTests {
     @Test
     void testFindIntersections() {
 
-        Triangle triangle = new Triangle(new Point(0, 2, 0), new Point(2, 0, 0), new Point(-2, 0, 0));
         Point p1 = new Point(1, -1, -1);
 
         // ============ Equivalence Partitions Tests ==============
@@ -70,6 +72,7 @@ class TriangleTests {
                 "intersection point is out of the triangle and between the continuation of two of its sides");
 
 
+
         // =============== Boundary Values Tests ==================
         // TC04: intersection point is one of the triangle's corners
         assertNull(triangle.findIntersections(new Ray(p1, new Vector(-1, 3, 1))),
@@ -82,5 +85,14 @@ class TriangleTests {
         // TC06: intersection point is on the continuation of one of the sides
         assertNull(triangle.findIntersections(new Ray(p1, new Vector(-4, 1, 1))),
                 "intersection point is on the continuation of one of the sides");
+    }
+
+    /**
+     * Test method for {@link geometries.Triangle#findGeoIntersections(primitives.Ray, double)}.
+     */
+    @Test
+    void testFindGeoIntersections() {
+        assertNull(triangle.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)), 100),
+                "a far intersection Point is included in intersections");
     }
 }

@@ -78,14 +78,14 @@ public class Plane extends Geometry {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDistance) {
 
 
         // Calculate the denominator of the equation
         double denom = normal.dotProduct(ray.getDir());
 
         // if ray is parallel to tha plans normal there are no intersections
-        if (isZero(denom))
+        if (isZero(denom) )
             return null;
 
         // If the origin of the ray is the reference point of the plane, there are no intersections
@@ -96,6 +96,10 @@ public class Plane extends Geometry {
         Vector QP0 = q0.subtract(ray.getP0());
         double numer = normal.dotProduct(QP0);
         double t = alignZero(numer / denom);
+
+        if(alignZero(maxDistance - t) <=0){
+            return  null;
+        }
 
         // If the intersection point is behind the origin of the ray, there are no intersections
         if (t <= 0)

@@ -57,6 +57,9 @@ class PlaneTests {
                 "all three points are on one line");
     }
 
+    /**
+     * Test method for {@link geometries.Plane#findIntersections(primitives.Ray)}.
+     */
     @Test
     void testFindIntersections() {
         Point p1 = new Point(-1, 0, -2);
@@ -101,4 +104,17 @@ class PlaneTests {
         // TC09: Ray begins in the same point that appears as the reference point of plane
         assertNull(plane.findIntersections(new Ray(plane.getQ0(), new Vector(0, 5, 2))), "Ray starts at Q0");
     }
+
+
+    /**
+     * Test method for {@link geometries.Plane#findGeoIntersections(primitives.Ray, double)}.
+     */
+    @Test
+    void testFindGeoIntersections() {
+        Plane plane = new Plane(new Point(-2, 0, 0), new Vector(0, 0, 2));
+        assertNull(plane.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)),100),
+                "too far point is included in intersections");
+    }
+
+
 }
