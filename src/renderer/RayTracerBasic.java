@@ -24,11 +24,6 @@ public class RayTracerBasic extends RayTracerBase {
     private static final Double3 INITIAL_K = Double3.ONE;
 
 
-    /**
-     * Constructs a RayTracerBasic object with the given scene.
-     *
-     * @param scene the scene to trace rays in
-     */
     public RayTracerBasic(Scene scene) {
         super(scene);
     }
@@ -42,12 +37,7 @@ public class RayTracerBasic extends RayTracerBase {
     }
 
 
-    /**
-     * Calculates the color at a specific point
-     *
-     * @param intersection the point to calculate the color at.
-     * @return the color at the specified point.
-     */
+
     private Color calcColor(GeoPoint intersection, Ray ray, int level, Double3 k) {
         Color color = calcLocalEffects(intersection, ray, k);
         return level == 1 ? color
@@ -61,13 +51,6 @@ public class RayTracerBasic extends RayTracerBase {
     }
 
 
-    /**
-     * Calculates the local effects (diffuse and specular) for a given geometric point and ray in the scene.
-     *
-     * @param geoPoint The geometric point to calculate the local effects for.
-     * @param ray      The ray used to reach the geometric point.
-     * @return The color resulting from the local effects.
-     */
     private Color calcLocalEffects(GeoPoint geoPoint, Ray ray, Double3 k) {
 
         // Initialize the color with the emission color of the geometry at the geometric point
@@ -105,9 +88,10 @@ public class RayTracerBasic extends RayTracerBase {
                 Double3 ktr = transparency(lightSource, l, n, geoPoint);
                 // Check if the geometric point is unshaded by any objects in the scene along the light direction
                 if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
-
+//                if(unshaded(geoPoint,l,n,nv,lightSource)){
                     // Get the intensity of the light source at the geometric point
-                    Color iL = lightSource.getIntensity(geoPoint.point).scale(ktr);
+//                    Color iL = lightSource.getIntensity(geoPoint.point).scale(ktr);
+                    Color iL = lightSource.getIntensity(geoPoint.point);
 
                     // Calculate the diffuse reflection component
                     Double3 diffuse = calcDiffuse(material, nl);
@@ -125,29 +109,12 @@ public class RayTracerBasic extends RayTracerBase {
     }
 
 
-    /**
-     * Calculates the diffuse reflection component for a given material
-     * and the dot product of the surface normal and light vector.
-     *
-     * @param material The material of the surface.
-     * @param nl       The dot product of the surface normal and light vector.
-     * @return The diffuse reflection component.
-     */
     private Double3 calcDiffuse(Material material, double nl) {
         // Diffuse reflection is determined by scaling the diffuse coefficient with the absolute value of the dot product of the surface normal and light vector
         return material.kD.scale(Math.abs(nl));
     }
 
-    /**
-     * Calculates the specular reflection component for a given material, surface normal, light vector, view vector, and the dot product of the surface normal and light vector.
-     *
-     * @param material The material of the surface.
-     * @param n        The surface normal.
-     * @param l        The light vector.
-     * @param nl       The dot product of the surface normal and light vector.
-     * @param v        The view vector.
-     * @return The specular reflection component.
-     */
+
     private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
 
         // Calculate the reflection vector using the formula: r = l - 2 * (nl * n)
@@ -163,21 +130,29 @@ public class RayTracerBasic extends RayTracerBase {
         return material.kS.scale(Math.pow(max, material.nShininess));
     }
 
-    /**
-     * Calculates the transparency of a point, like unshaded but returns amount of shading
-     *
-     * @param gp the point on the geometry that we're currently shading
-     * @param l the vector from the point to the light source
-     * @param n the normal vector of the point
-     * @param lightSource the light source
-     *
-     * @return the transparency of the point
-     */
+    private boolean unshaded(GeoPoint gp, Vector l, Vector n, double nv, LightSource light) {
+
+        // Reverse the light direction to get the direction from the point towards the light source
+        Vector lightDirection = l.scale(-1);
+
+        // Create a ray from the geometric point towards the light source
+        Ray lightRay = new Ray(gp.point, lightDirection, n);
+
+        // Find the intersections between the ray and the geometries in the scene
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
+
+        if (intersections == null)
+            return true;
+
+        // If there are no intersections, the point is unshaded
+        return intersections.isEmpty();
+    }
+
     private Double3 transparency(LightSource lightSource, Vector l, Vector n, GeoPoint gp) {
         // Pay attention to your method of distance screening
         Vector lightDirection = l.scale(-1); // from point to light source
         Point point = gp.point;
-        Ray lightRay = new Ray(point, n, lightDirection);
+        Ray lightRay = new Ray(point, lightDirection, n);
 
         double maxDistance = lightSource.getDistance(point);
         List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, maxDistance);
@@ -188,44 +163,32 @@ public class RayTracerBasic extends RayTracerBase {
         Double3 ktr = Double3.ONE;
 
         for (GeoPoint geo : intersections) {
-            ktr = ktr.product(geo.geometry.getKt());
-            if (ktr.lowerThan(MIN_CALC_COLOR_K)) {
+            if (point.distance(geo.point) < lightSource.getDistance(point)) {
+                ktr = geo.geometry.getKt().product(ktr);
+            }
+
+            if (ktr.equals(Double3.ZERO)) {
                 return Double3.ZERO;
             }
         }
         return ktr;
     }
 
-
     private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k) {
-
-        Color color = Color.BLACK;
         Vector v = ray.getDir();
         Vector n = gp.geometry.getNormal(gp.point);
         Material material = gp.geometry.getMaterial();
-        try {
-            Ray reflectedRay = constructReflectedRay(gp, v, n);
-            Ray refractedRay = constructRefractedRay(gp, v, n);
-            return calcGlobalEffects(reflectedRay, level, k, material.kR)
-                    .add(calcGlobalEffects(refractedRay, level, k, material.kT));
-        }
-        catch (Exception ex) {
-            return color;
-        }
-
+        return calcGlobalEffect(constructReflectedRay(gp, v, n), level, k, material.kR)
+                .add(calcGlobalEffect(constructRefractedRay(gp, v, n), level, k, material.kT));
     }
 
-
-    private Color calcGlobalEffects(Ray ray, int level, Double3 k, Double3 kx) {
-
-        Double3 kkr = k.product(kx);
-        if (kkr.lowerThan(MIN_CALC_COLOR_K))  return Color.BLACK;
+    private Color calcGlobalEffect(Ray ray, int level, Double3 k, Double3 kx) {
+        Double3 kkx = k.product(kx);
+        if (kkx.lowerThan(MIN_CALC_COLOR_K)) return Color.BLACK;
         GeoPoint gp = findClosestIntersection(ray);
-        if (gp == null)
-            return scene.background.scale(kx);
-
-        return isZero(gp.geometry.getNormal(gp.point).dotProduct(ray.getDir()))
-                ? Color.BLACK : calcColor(gp, ray, level - 1, kkr).scale(kx);
+        if (gp == null) return scene.background.scale(kx);
+        return isZero(gp.geometry.getNormal(gp.point).dotProduct(ray.getDir())) ? Color.BLACK
+                : calcColor(gp, ray, level - 1, kkx).scale(kx);
     }
 
     private GeoPoint findClosestIntersection(Ray ray) {
@@ -241,7 +204,7 @@ public class RayTracerBasic extends RayTracerBase {
         try {
             double vn = v.dotProduct(n);
             Vector r = v.subtract(n.scale(vn * 2)).normalize();
-            return new Ray(gp.point, r);
+            return new Ray(gp.point, r, n);
         } catch (Exception ex) {
             return null;
         }

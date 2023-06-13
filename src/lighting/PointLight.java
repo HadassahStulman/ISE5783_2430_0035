@@ -4,6 +4,8 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+import static primitives.Util.alignZero;
+
 /**
  * A subclass of Light representing a point light source.
  * Implements the LightSource interface.
@@ -72,7 +74,7 @@ public class PointLight extends Light implements LightSource {
 
         // Calculate the denominator for the intensity calculation using attenuation factors
         // The intensity decreases with distance based on the attenuation factors
-        double denom = kC + kL * distance + kQ * distance * distance;
+        double denom = alignZero(kC + kL * distance + kQ * distance * distance);
 
         // Reduce the intensity by dividing it by the denominator and returns the result
         return getIntensity().reduce(denom);

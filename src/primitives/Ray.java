@@ -56,7 +56,7 @@ public class Ray {
         if(isZero(nv))
             this.p0 = head;
         else
-            this.p0 = head.add(normal.scale(nv < 0 ? DELTA : -DELTA));
+            this.p0 = head.add(normal.scale(nv > 0 ? DELTA : -DELTA));
         this.dir = direction;
     }
 
