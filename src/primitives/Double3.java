@@ -3,7 +3,7 @@
  */
 package primitives;
 
-import static primitives.Util.isZero;
+import static primitives.Util.*;
 
 /**
  * This class will serve all primitive classes based on three numbers
@@ -154,4 +154,5 @@ public class Double3 {
     public boolean lowerThan(Double3 other) {
         return d1 < other.d1 && d2 < other.d2 && d3 < other.d3;
     }
+
 }

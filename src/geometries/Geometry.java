@@ -1,9 +1,6 @@
 package geometries;
 
-import primitives.Color;
-import primitives.Material;
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * interface geometry is the basic behavior of all Geometries in Cartesian 3-Dimensional coordinate system
@@ -65,4 +62,23 @@ public abstract class Geometry extends Intersectable {
         this.material = material;
         return this;
     }
+
+    /**
+     * Retrieves the reflection coefficient of the material.
+     *
+     * @return The reflection coefficient as a Double3 object.
+     */
+    public Double3 getKr(){
+        return material.kR;
+    }
+
+    /**
+     * Retrieves the transmission coefficient of the material.
+     *
+     * @return The transmission coefficient as a Double3 object.
+     */
+    public Double3 getKt(){
+        return material.kT;
+    }
+
 }
