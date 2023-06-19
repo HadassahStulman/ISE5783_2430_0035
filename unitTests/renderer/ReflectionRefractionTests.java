@@ -5,6 +5,9 @@ package renderer;
 
 import static java.awt.Color.*;
 
+import geometries.Plane;
+import lighting.DirectionalLight;
+import lighting.PointLight;
 import org.junit.jupiter.api.Test;
 
 import geometries.Sphere;
@@ -107,4 +110,38 @@ public class ReflectionRefractionTests {
          .renderImage() //
          .writeToImage();
    }
+// *****************our picture for Tatgil7****************
+
+
+
+   @Test
+   public void everything() {
+      Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+              .setVPSize(200, 200).setVPDistance(1000);
+
+      sceneB.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.20)));
+      Scene scene= sceneB.build();
+      scene.geometries.add( //
+              new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135), new Point(75, 75, -150)) //
+                      .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
+              new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
+                      .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60).setKr(new Double3(0.8))), //
+              new Sphere(new Point(-60, 70, 40), 30d).setEmission(new Color(600, 0, 600)) //
+                      .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.9)),
+              new Sphere(new Point(50, -20, -100), 30d).setEmission(new Color(50, 300, 400)) //
+                      .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30)));
+
+      scene.lights.add(new PointLight(new Color(100, 200, 200), new Point(60, 50, 100)) //
+              .setKl(4E-5).setKq(2E-7));
+      scene.lights.add(new PointLight(new Color(ORANGE).reduce(2), new Point(-10, 50, -10))
+              .setKl(0.00003).setKc(1.00001).setKq(0.000001));
+      scene.lights.add(new DirectionalLight(new Color(255, 0, 0), new Vector(-5, -5, -5)));
+
+      ImageWriter imageWriter = new ImageWriter("everything", 600, 600);
+      camera.setImageWriter(imageWriter) //
+              .setRayTracer(new RayTracerBasic(scene)) //
+              .renderImage(); //
+      camera.writeToImage();
+   }
+
 }
