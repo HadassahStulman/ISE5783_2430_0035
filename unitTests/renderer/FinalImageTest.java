@@ -158,6 +158,8 @@ public class FinalImageTest {
         ImageWriter imageWriter = new ImageWriter("FinalImage", 600, 600);
         camera.setImageWriter(imageWriter) //
                 .setRayTracer(new RayTracerBasic(scene)) //
+                .setMultithreading(6)//
+                .setDebugPrint(0.1) //
                 .renderImage() //
                 .writeToImage();
     }

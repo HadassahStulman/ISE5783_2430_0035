@@ -239,8 +239,8 @@ public class Camera {
      *
      * @param nX the number of pixels along the width of the image plane
      * @param nY the number of pixels along the height of the image plane
-     * @param j  the horizontal index of the pixel being casted
-     * @param i  the vertical index of the pixel being casted
+     * @param j  the horizontal index of the pixel which was being cast
+     * @param i  the vertical index of the pixel which was being cast
      * @return the color of the closest intersected geometry, if any
      */
     private Color castRay(int nX, int nY, int j, int i) {
@@ -340,13 +340,9 @@ public class Camera {
         pixelManager = new PixelManager(nY, nX, printInterval);
 
         if (threadsCount == 0) {
-
-            // Iterate over the width of the image (columns)
-            for (int j = 0; j < nX; j++) {
-        Color color;
-
+            Color color;
         // Iterate over the width of the image (columns)
-        for (int j = 0; j < nX; j++) {
+            for (int j = 0; j < nX; j++) {
 
                 // Iterate over the height of the image (rows)
                 for (int i = 0; i < nY; i++) {
@@ -357,7 +353,7 @@ public class Camera {
                     color = castRayBeam(nX, nY, j, i);
                 }
                 imageWriter.writePixel(j, i, color);
-                    Color color = castRay(nX, nY, j, i);
+                    color = castRay(nX, nY, j, i);
                     imageWriter.writePixel(j, i, color);
                 }
             }
@@ -367,10 +363,20 @@ public class Camera {
             while (threadsCount-- > 0) // add appropriate number of threads
                 threads.add(new Thread(() -> { // add a thread with its code
                     PixelManager.Pixel pixel; // current pixel(row,col)
+
                     // allocate pixel(row,col) in loop until there are no more pixels
-                    while ((pixel = pixelManager.nextPixel()) != null)
+                    Color color;
+                    while ((pixel = pixelManager.nextPixel()) != null) {
                         // cast ray through pixel (and color it – inside castRay)
-                        castRay(nX, nY, pixel.col(), pixel.row());
+                        if (superSampling == 0) {
+                            color = castRay(nX, nY, pixel.col(), pixel.row());
+                        } else { // superSampling
+                            color = castRayBeam(nX, nY, pixel.col(), pixel.row());
+                        }
+                        imageWriter.writePixel(pixel.col(), pixel.row(), color);
+                        color = castRay(nX, nY, pixel.col(), pixel.row());
+                        imageWriter.writePixel(pixel.col(), pixel.row(), color);
+                    }
                 }));
             // start all the threads
             for (var thread : threads) thread.start();
@@ -388,7 +394,7 @@ public class Camera {
      * @param color    the color of the lines.
      * @throws MissingResourceException if the image writer of the camera is missing.
      */
-    public void printGrid(int interval, Color color) {
+    public Camera printGrid(int interval, Color color) {
 
         if (imageWriter == null)
             throw new MissingResourceException("missing the image writer of the camera", "ImageWriter", "imageWriter");
@@ -408,6 +414,7 @@ public class Camera {
                 imageWriter.writePixel(col, row, color);
             }
         }
+        return this;
     }
 
     /**
