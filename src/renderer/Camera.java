@@ -4,6 +4,7 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+import java.util.LinkedList;
 
 import java.util.MissingResourceException;
 
@@ -64,6 +65,27 @@ public class Camera {
      */
     private RayTracerBase rayTracer;
 
+    private int threadsCount = 0;
+
+
+
+    /**
+     * Pixel manager for supporting:
+     * <ul>
+     * <li>multi-threading</li>
+     * <li>debug print of progress percentage in Console window/tab</li>
+     * <ul>
+     */
+    private PixelManager pixelManager;
+
+    /**
+     * The interval (in seconds) between printing camera updates for multithreading.
+     *
+     * <p>This field represents the time interval at which the camera updates are printed
+     * when the camera is being used in a multithreading context. The value is measured in
+     * seconds and defaults to 5 seconds.</p>
+     */
+    private double printInterval=5;
 
     /**
      * Constructs a new Camera object with the specified position, up vector,
@@ -136,6 +158,35 @@ public class Camera {
         this.rayTracer = rayTracer;
         return this;
     }
+
+    /**
+     * The setter initialize rendering-progress printing time interval in seconds
+     *
+     * @param printInterval - the interval of printing
+     * @return This Camera object
+     */
+    public Camera setDebugPrint(double printInterval) {
+        this.printInterval = printInterval;
+        return this;
+    }
+
+    /**
+     * Set multi threading functionality for accelerating the rendering speed.
+     * Initialize the number of threads.
+     * The default value is 0 (no threads).
+     * The recommended value for the multithreading is 3.
+     *
+     * @param threadsCount the threads amount
+     * @return This Camera object
+     */
+    public Camera setMultithreading(int threadsCount) {
+        if (threadsCount < 0)
+            throw new IllegalArgumentException("Threads parameter must be 0 or higher");
+        if (threadsCount != 0)
+            this.threadsCount = threadsCount;
+        return this;
+    }
+
 
     /**
      * Constructs a new ray from the camera's position through the specified
@@ -211,15 +262,36 @@ public class Camera {
 
         int nX = imageWriter.getNx();
         int nY = imageWriter.getNy();
-        // Iterate over the width of the image (columns)
-        for (int j = 0; j < nX; j++) {
 
-            // Iterate over the height of the image (rows)
-            for (int i = 0; i < nY; i++) {
+        pixelManager = new PixelManager(nY, nX, printInterval);
 
-                Color color = castRay(nX, nY, j, i);
-                imageWriter.writePixel(j, i, color);
+        if (threadsCount == 0) {
+
+            // Iterate over the width of the image (columns)
+            for (int j = 0; j < nX; j++) {
+
+                // Iterate over the height of the image (rows)
+                for (int i = 0; i < nY; i++) {
+
+                    Color color = castRay(nX, nY, j, i);
+                    imageWriter.writePixel(j, i, color);
+                }
             }
+        }
+        else{
+            var threads = new LinkedList<Thread>(); // list of threads
+            while (threadsCount-- > 0) // add appropriate number of threads
+                threads.add(new Thread(() -> { // add a thread with its code
+                    PixelManager.Pixel pixel; // current pixel(row,col)
+                    // allocate pixel(row,col) in loop until there are no more pixels
+                    while ((pixel = pixelManager.nextPixel()) != null)
+                        // cast ray through pixel (and color it – inside castRay)
+                        castRay(nX, nY, pixel.col(), pixel.row());
+                }));
+            // start all the threads
+            for (var thread : threads) thread.start();
+            // wait until all the threads have finished
+            try { for (var thread : threads) thread.join(); } catch (InterruptedException ignore) {}
         }
         return this;
     }
