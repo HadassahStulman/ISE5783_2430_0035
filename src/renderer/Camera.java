@@ -5,6 +5,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.MissingResourceException;
 
 import static primitives.Util.isZero;
@@ -63,6 +65,8 @@ public class Camera {
      * The RayTracerBase object used to trace the rays in the scene captured by the camera.
      */
     private RayTracerBase rayTracer;
+
+    private int superSampling = 0;
 
 
     /**
@@ -138,6 +142,17 @@ public class Camera {
     }
 
     /**
+     * sets the superSampling flag of the Camera
+     *
+     * @param superSampling the superSampling flag to be set
+     * @return this Camera object
+     */
+    public Camera setSuperSampling(int superSampling) {
+        this.superSampling = superSampling;
+        return this;
+    }
+
+    /**
      * Constructs a new ray from the camera's position through the specified
      * pixel coordinates in the viewPlane.
      *
@@ -184,8 +199,68 @@ public class Camera {
     }
 
 
+    private Color castRayBeam(int nX, int nY, int j, int i) {
+        int superSamp = superSampling;
+        List<Ray> ans = new ArrayList<>();
+
+        //Image center
+        Point p = p0.add(vTo.scale(distance));
+
+        //Ratio (pixel width & height)
+        double rY = height / nY;
+        double rX = width / nX;
+
+        //Pixel[i,j] center
+        double yI = -(i - ((nY - 1) / 2)) * rY;
+        double xJ = (j - ((nX - 1) / 2)) * rX;
+
+        //distance between the start of the ray in the pixel
+        double dX = (double) rX / superSamp;
+        double dY = (double) rY / superSamp;
+
+        //the first point
+        double firstX = xJ + ((int) (superSamp / 2)) * dX;
+        double firstY = yI + ((int) (superSamp / 2)) * dY;
+        Point pIJ = p;
+        if (!isZero(firstX))
+            pIJ = pIJ.add(vRight.scale(firstX));
+        if (!isZero(firstY))
+            pIJ = pIJ.add(vUp.scale(firstY));
+        Point p1 = pIJ;
+
+        for (int c = 0; c < superSamp; c++) {
+            for (int b = 0; b < superSamp; b++) {
+                p1 = pIJ;
+                if (!isZero(c)) {
+                    p1 = p1.add(vRight.scale(dX * c));
+                }
+                if (!isZero(b)) {
+                    p1 = p1.add(vUp.scale(dY * b));
+                }
+
+                ans.add(new Ray(p0, p1.subtract(p0)));
+            }
+        }
+
+        double r = 0, g = 0, b = 0;
+        for (Ray ray : ans) {
+            Color rayColor = rayTracer.traceRay(ray);
+            r += rayColor.getColor().getRed();
+            g += rayColor.getColor().getGreen();
+            b += rayColor.getColor().getBlue();
+        }
+        r = r / (ans.size());
+        g = g / (ans.size());
+        b = b / (ans.size());
+
+        return new Color(r, g, b);
+
+    }
+
+
     /**
      * Renders an image using the camera's settings.
+     *
      * @return this camera object
      * @throws MissingResourceException if one of the camera's fields is missing
      */
@@ -211,13 +286,19 @@ public class Camera {
 
         int nX = imageWriter.getNx();
         int nY = imageWriter.getNy();
+        Color color;
+
         // Iterate over the width of the image (columns)
         for (int j = 0; j < nX; j++) {
 
             // Iterate over the height of the image (rows)
             for (int i = 0; i < nY; i++) {
 
-                Color color = castRay(nX, nY, j, i);
+                if (superSampling == 0) {
+                    color = castRay(nX, nY, j, i);
+                } else { // superSampling
+                    color = castRayBeam(nX, nY, j, i);
+                }
                 imageWriter.writePixel(j, i, color);
             }
         }

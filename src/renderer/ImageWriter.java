@@ -26,6 +26,8 @@ public class ImageWriter {
 
     private final Logger logger = Logger.getLogger("ImageWriter");
 
+
+
     // ***************** Constructors ********************** //
 
     /**

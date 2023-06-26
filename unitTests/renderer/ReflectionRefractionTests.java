@@ -29,7 +29,7 @@ public class ReflectionRefractionTests {
    @Test
    public void twoSpheres() {
       Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
-         .setVPSize(150, 150).setVPDistance(1000);
+         .setVPSize(150, 150).setVPDistance(1000).setSuperSampling(1);
       Scene scene = sceneB.build();
 
       scene.geometries.add( //

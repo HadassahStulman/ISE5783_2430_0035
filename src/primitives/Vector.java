@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.isZero;
+
 /**
  * Class Vector is the basic class representing a vector of Euclidean geometry in Cartesian 3-Dimensional coordinate system
  *
@@ -47,6 +49,8 @@ public class Vector extends Point {
      * @return result of multiplication
      */
     public Vector scale(double number) {
+        if(isZero(number))
+            return this;
         return new Vector(this.xyz.scale(number));
     }
 

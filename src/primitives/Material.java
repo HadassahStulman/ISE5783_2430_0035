@@ -20,12 +20,12 @@ public class Material {
     public Double3 kS = Double3.ZERO;
 
     /**
-     * The reflection coefficient.
+     * The transparency coefficient.
      */
     public Double3 kT = Double3.ZERO;
 
     /**
-     * The transparency coefficient.
+     * The reflection coefficient.
      */
     public Double3 kR = Double3.ZERO;
 
