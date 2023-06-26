@@ -23,7 +23,7 @@ public class ShadowTests {
             .build();
    private Camera        camera     = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0))   //
       .setVPSize(200, 200).setVPDistance(1000)                                                                       //
-      .setRayTracer(new RayTracerBasic(scene));
+      .setRayTracer(new RayTracerBasic(scene)).setSuperSampling(1);
 
    /** Helper function for the tests in this module */
    void sphereTriangleHelper(String pictName, Triangle triangle, Point spotLocation) {
