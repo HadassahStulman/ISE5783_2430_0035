@@ -35,6 +35,7 @@ public abstract class Intersectable {
     /**
      * Finds the intersections of a ray with the geometry, considering all intersections within a maximum distance.
      * return points in GeoPoint format
+     *
      * @param ray The ray to find intersections with.
      * @return A list of GeoPoints representing the intersections.
      */
@@ -45,7 +46,8 @@ public abstract class Intersectable {
     /**
      * Finds the intersections of a ray with the geometry, considering all intersections within a maximum distance.
      * return points in GeoPoint format
-     * @param ray The ray to find intersections with.
+     *
+     * @param ray         The ray to find intersections with.
      * @param maxDistance The maximum distance to consider for intersections.
      * @return A list of GeoPoints representing the intersections.
      */
@@ -57,7 +59,7 @@ public abstract class Intersectable {
      * Helper method to find the intersections of a ray with the geometry, considering all intersections within a maximum distance.
      * Subclasses must implement this method to provide the actual intersection logic.
      *
-     * @param ray The ray to find intersections with.
+     * @param ray         The ray to find intersections with.
      * @param maxDistance The maximum distance to consider for intersections.
      * @return A list of GeoPoints representing the intersections.
      */
@@ -83,8 +85,9 @@ public abstract class Intersectable {
 
         /**
          * constructor to initialize GeoPoint
+         *
          * @param geometry the Geometry object of the GeoPoint
-         * @param point the coordinate of the point
+         * @param point    the coordinate of the point
          */
         public GeoPoint(Geometry geometry, Point point) {
             this.geometry = geometry;

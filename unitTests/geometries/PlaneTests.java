@@ -112,7 +112,7 @@ class PlaneTests {
     @Test
     void testFindGeoIntersections() {
         Plane plane = new Plane(new Point(-2, 0, 0), new Vector(0, 0, 2));
-        assertNull(plane.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)),100),
+        assertNull(plane.findGeoIntersections(new Ray(new Point(0, 0, 110), new Vector(0, 1, -111)), 100),
                 "too far point is included in intersections");
     }
 

@@ -18,7 +18,7 @@ import static primitives.Util.isZero;
  */
 public class PolygonTests {
 
-   private  Point[] pts = {new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1)};
+    private Point[] pts = {new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1)};
     private Polygon pol = new Polygon(pts);
 
     /**
@@ -131,7 +131,7 @@ public class PolygonTests {
      */
     @Test
     void testFindGeoIntersections() {
-        assertNull(pol.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)), 100),
+        assertNull(pol.findGeoIntersections(new Ray(new Point(0, 0, 110), new Vector(0, 1, -111)), 100),
                 "a far intersection Point is included in intersections");
     }
 }

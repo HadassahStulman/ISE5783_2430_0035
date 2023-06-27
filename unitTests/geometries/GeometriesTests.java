@@ -53,7 +53,7 @@ class GeometriesTests {
      */
     @Test
     void testFindGeoIntersections() {
-    assertNull(geometry.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)),100),
-            "a far point is included in intersections");
+        assertNull(geometry.findGeoIntersections(new Ray(new Point(0, 0, 110), new Vector(0, 1, -111)), 100),
+                "a far point is included in intersections");
     }
 }

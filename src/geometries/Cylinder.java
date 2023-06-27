@@ -1,10 +1,6 @@
 package geometries;
 
-import primitives.Point;
 import primitives.Ray;
-import primitives.Vector;
-
-import java.util.List;
 
 /**
  * Cylinder class represents three-dimensional Cylinder in 3D Cartesian coordinate
@@ -37,4 +33,4 @@ public class Cylinder extends Tube {
     }
 
 
-   }
+}

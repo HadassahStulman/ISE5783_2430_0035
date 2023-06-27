@@ -105,7 +105,6 @@ public class Material {
     }
 
 
-
     /**
      * Sets the reflection coefficient of the material.
      *

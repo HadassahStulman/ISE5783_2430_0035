@@ -45,15 +45,15 @@ public class Ray {
      * Constructs a Ray object with the given parameters.
      * The ray is defined by a starting point (head), a direction vector, and a surface normal vector.
      *
-     * @param head The starting point of the ray as a Point object.
+     * @param head      The starting point of the ray as a Point object.
      * @param direction The direction vector of the ray as a Vector object.
-     * @param normal The surface normal vector as a Vector object.
+     * @param normal    The surface normal vector as a Vector object.
      */
     public Ray(Point head, Vector direction, Vector normal) {
 
         // Calculate the dot product between the surface normal and the direction vector of the ray
         double nv = alignZero(normal.dotProduct(direction));
-        if(isZero(nv))
+        if (isZero(nv))
             this.p0 = head;
         else
             this.p0 = head.add(normal.scale(nv > 0 ? DELTA : -DELTA));

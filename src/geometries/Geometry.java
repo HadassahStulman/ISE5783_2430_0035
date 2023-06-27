@@ -68,7 +68,7 @@ public abstract class Geometry extends Intersectable {
      *
      * @return The reflection coefficient as a Double3 object.
      */
-    public Double3 getKr(){
+    public Double3 getKr() {
         return material.kR;
     }
 
@@ -77,7 +77,7 @@ public abstract class Geometry extends Intersectable {
      *
      * @return The transmission coefficient as a Double3 object.
      */
-    public Double3 getKt(){
+    public Double3 getKt() {
         return material.kT;
     }
 

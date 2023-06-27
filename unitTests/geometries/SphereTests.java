@@ -135,7 +135,7 @@ class SphereTests {
      */
     @Test
     public void testFindGeoIntersections() {
-        assertNull(sp.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,-0.5, -113)),100),
+        assertNull(sp.findGeoIntersections(new Ray(new Point(0, 0, 110), new Vector(0, -0.5, -113)), 100),
                 "a far intersection Point is included in intersections");
     }
 }

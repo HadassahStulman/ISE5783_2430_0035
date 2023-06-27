@@ -143,4 +143,15 @@ public class Color {
     public String toString() {
         return "rgb:" + rgb;
     }
+
+    public boolean almostEquals(Color other) {
+        java.awt.Color thisColor = this.getColor();
+        java.awt.Color otherColor = other.getColor();
+        if ((thisColor.getBlue() + 10 == otherColor.getBlue() || thisColor.getBlue() == otherColor.getBlue() + 10) &&
+                (thisColor.getRed() + 10 == otherColor.getRed() || thisColor.getRed() == otherColor.getRed() + 10) &&
+                (thisColor.getGreen() + 10 == otherColor.getGreen() || thisColor.getGreen() == otherColor.getGreen() + 10)) {
+            return true;
+        }
+        return false;
+    }
 }

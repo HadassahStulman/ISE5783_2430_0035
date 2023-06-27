@@ -49,7 +49,7 @@ public class Vector extends Point {
      * @return result of multiplication
      */
     public Vector scale(double number) {
-        if(isZero(number))
+        if (isZero(number))
             return this;
         return new Vector(this.xyz.scale(number));
     }

@@ -20,12 +20,11 @@ import java.util.logging.Logger;
 public class ImageWriter {
     private static final String FOLDER_PATH = System.getProperty("user.dir") + "/images";
     private final int nX;
-    private final  int nY;
+    private final int nY;
     private final BufferedImage image;
     private final String imageName;
 
     private final Logger logger = Logger.getLogger("ImageWriter");
-
 
 
     // ***************** Constructors ********************** //

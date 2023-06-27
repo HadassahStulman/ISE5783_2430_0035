@@ -72,7 +72,6 @@ class TriangleTests {
                 "intersection point is out of the triangle and between the continuation of two of its sides");
 
 
-
         // =============== Boundary Values Tests ==================
         // TC04: intersection point is one of the triangle's corners
         assertNull(triangle.findIntersections(new Ray(p1, new Vector(-1, 3, 1))),
@@ -92,7 +91,7 @@ class TriangleTests {
      */
     @Test
     void testFindGeoIntersections() {
-        assertNull(triangle.findGeoIntersections(new Ray(new Point(0,0,110), new Vector(0,1,-111)), 100),
+        assertNull(triangle.findGeoIntersections(new Ray(new Point(0, 0, 110), new Vector(0, 1, -111)), 100),
                 "a far intersection Point is included in intersections");
     }
 }
